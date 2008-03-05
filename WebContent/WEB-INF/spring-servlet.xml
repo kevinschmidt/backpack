@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+	<bean id="backpackController" class="eu.stupidsoup.backpack.BackpackController">
+		<property name="listManager"><ref bean="listMan" /></property>
+	</bean>
+	
+	<bean id="listMan" class="eu.stupidsoup.backpack.ListManager">
+        <property name="backpackAccessor"><ref bean="backpackAccessor" /></property>
+	</bean>
+	
+	<bean id="backpackAccessor" class="eu.stupidsoup.backpack.accessor.AxiomAccessor">
+        <property name="url" value="https://soup.backpackit.com/" />
+        <property name="apiKey" value="8e549ba5fe851d32ac8ab12d143c19ab723b5002" />
+    </bean>
+	
+	
+	<bean id="urlMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+		<property name="mappings">
+			<props>
+				<prop key="/hello.html">backpackController</prop>
+			</props>
+		</property>
+	</bean>
+	
+	<bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="viewClass"><value>org.springframework.web.servlet.view.JstlView</value></property>
+        <property name="prefix"><value>/WEB-INF/jsp/</value></property>
+        <property name="suffix"><value>.jsp</value></property>
+    </bean>
+</beans>
