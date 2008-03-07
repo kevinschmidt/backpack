@@ -17,7 +17,7 @@
         <!--   for Tomcat 4.1 use servlet.jar        -->
         <!--   for Tomcat 5.0 use servlet-api.jar    -->
         <!--   for Other app server - check the docs -->
-        <fileset dir="${appserver.home}/common/lib">
+        <fileset dir="/usr/share/tomcat-servlet-api-2.5/lib/">
             <include name="servlet*.jar"/>
         </fileset>
         <pathelement path="${build.dir}"/>
@@ -43,7 +43,7 @@
 
     <target name="build" description="Compile main source tree java files">
         <mkdir dir="${build.dir}"/>
-        <javac destdir="${build.dir}" target="1.3" debug="true"
+        <javac destdir="${build.dir}" target="1.5" debug="true"
                deprecation="false" optimize="false" failonerror="true">
             <src path="${src.dir}"/>
             <classpath refid="master-classpath"/>
