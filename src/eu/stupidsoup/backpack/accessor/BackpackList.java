@@ -43,6 +43,11 @@ public class BackpackList implements Iterable<BackpackListItem> {
 		return this.items.iterator();
 	}
 	
+	public boolean isEmpty() {
+		return this.items.isEmpty();
+	}
+	
+	
 	
 	public String getItemsAsString() {
 		StringBuffer result = new StringBuffer();
@@ -53,5 +58,15 @@ public class BackpackList implements Iterable<BackpackListItem> {
 		}
 		
 		return result.toString();
+	}
+	
+	public List<String> getItemsAsStringList() {
+		List<String> result = new ArrayList<String>();
+		
+		for (BackpackListItem item : this.items) {
+			result.add(item.getText());
+		}
+		
+		return result;
 	}
 }

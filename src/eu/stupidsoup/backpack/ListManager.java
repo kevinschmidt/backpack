@@ -1,5 +1,6 @@
 package eu.stupidsoup.backpack;
 
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -31,6 +32,7 @@ public class ListManager {
 	}
 
 
+	
 	public Map<String, String> getAllNextListsAsString() {
 		Map<String, String> result = new TreeMap<String, String>();
 		
@@ -40,6 +42,21 @@ public class ListManager {
 			BackpackList nextList = accessor.getListByName(pageId, "Next");
 			if ( nextList != null ) {
 				result.put(pageList.get(pageId), nextList.getItemsAsString());
+			}
+		}
+		
+		return result;
+	}
+	
+	public Map<String, List<String>> getAllNextListsAsStringList() {
+		Map<String, List<String>> result = new TreeMap<String, List<String>>();
+		
+		Map<Integer, String> pageList = accessor.getPageList();
+
+		for (Integer pageId: pageList.keySet()) {
+			BackpackList nextList = accessor.getListByName(pageId, "Next");
+			if ( nextList != null && !nextList.isEmpty() ) {
+				result.put(pageList.get(pageId), nextList.getItemsAsStringList());
 			}
 		}
 		

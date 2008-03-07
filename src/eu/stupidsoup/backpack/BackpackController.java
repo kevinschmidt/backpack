@@ -23,7 +23,7 @@ public class BackpackController implements Controller {
 				throws ServletException, IOException {
 			
 			Map backpackModel = new HashMap();
-			backpackModel.put("allNextLists", this.listManager.getAllNextListsAsString());
+			backpackModel.put("allNextLists", this.listManager.getAllNextListsAsStringList());
 			return new ModelAndView("nextlists", "model", backpackModel);
 			
 		}
