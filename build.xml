@@ -1,16 +1,17 @@
 <?xml version="1.0"?>
 
-<project name="spring" basedir="." default="usage">
+<project name="backpack" basedir="." default="usage">
     <property file="build.properties"/>
 
     <property name="src.dir" value="src"/>
-    <property name="web.dir" value="war"/>
+    <property name="lib.dir" value="lib"/>
+    <property name="web.dir" value="WebContent"/>
     <property name="build.dir" value="${web.dir}/WEB-INF/classes"/>
-    <property name="name" value="spring"/>
+    <property name="name" value="backpack"/>
 
     <path id="master-classpath">
-        <fileset dir="${web.dir}/WEB-INF/lib">
-            <include name="*.jar"/>
+        <fileset dir="${lib.dir}">
+            <include name="**/*.jar"/>
         </fileset>
         <!-- We need the servlet API classes:        -->
         <!--   for Tomcat 4.1 use servlet.jar        -->
