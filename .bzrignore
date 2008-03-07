@@ -1,4 +1,5 @@
 .svn
 *.classes
+./build
 ./war
 ./WebContent/WEB-INF/classes

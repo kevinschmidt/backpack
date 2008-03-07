@@ -4,8 +4,8 @@
     <property file="build.properties"/>
 
     <property name="src.dir" value="src"/>
-    <property name="web.dir" value="WebContent"/>
     <property name="lib.dir" value="lib"/>
+    <property name="web.dir" value="WebContent"/>
     <property name="build.dir" value="${web.dir}/WEB-INF/classes"/>
     <property name="name" value="backpack"/>
 
