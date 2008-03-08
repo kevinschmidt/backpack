@@ -19,7 +19,7 @@
 	<bean id="urlMapping" class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
 		<property name="mappings">
 			<props>
-				<prop key="/hello.html">backpackController</prop>
+				<prop key="/nextlist.html">backpackController</prop>
 			</props>
 		</property>
 	</bean>
