@@ -3,3 +3,4 @@
 ./build
 ./war
 ./WebContent/WEB-INF/classes
+.DS_Store
