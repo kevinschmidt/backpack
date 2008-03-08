@@ -48,8 +48,8 @@
             <src path="${src.dir}"/>
             <classpath refid="master-classpath"/>
         </javac>
-    	<copy todir="${web.dir}/WEB-INF/lib/">
-    		<fileset dir="${lib.dir}">
+    	<copy todir="${web.dir}/WEB-INF/lib/" flatten="true">
+    	    <fileset dir="${lib.dir}">
     	    	<include name="**/*.*"/>
     	    </fileset>
     	</copy>
