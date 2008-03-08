@@ -51,7 +51,12 @@
     </target>
 
     <target name="deploy" depends="build" description="Deploy application">
-        <copy todir="${deploy.path}/${name}" preservelastmodified="true">
+        <copy todir="${web.dir}/WEB-INF/lib/">
+            <fileset dir="${lib.dir}">
+                <include name="**/*.*"/>
+            </fileset>
+        </copy>
+    	<copy todir="${deploy.path}/${name}" preservelastmodified="true">
             <fileset dir="${web.dir}">
                 <include name="**/*.*"/>
             </fileset>
