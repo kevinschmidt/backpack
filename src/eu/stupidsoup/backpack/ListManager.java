@@ -16,13 +16,13 @@ public class ListManager {
 	}
 	
 	
-	public Map<String, BackpackList> getAllNextLists() {
+	public Map<String, BackpackList> getAllListsByName(String listName) {
 		Map<String, BackpackList> result = new TreeMap<String, BackpackList>();
 		
 		Map<Integer, String> pageList = accessor.getPageList();
 
 		for (Integer pageId: pageList.keySet()) {
-			BackpackList nextList = accessor.getListByName(pageId, "Next");
+			BackpackList nextList = accessor.getListByName(pageId, listName);
 			if ( nextList != null ) {
 				result.put(pageList.get(pageId), nextList);
 			}
@@ -33,13 +33,13 @@ public class ListManager {
 
 
 	
-	public Map<String, String> getAllNextListsAsString() {
+	public Map<String, String> getAllListsByNameAsString(String listName) {
 		Map<String, String> result = new TreeMap<String, String>();
 		
 		Map<Integer, String> pageList = accessor.getPageList();
 
 		for (Integer pageId: pageList.keySet()) {
-			BackpackList nextList = accessor.getListByName(pageId, "Next");
+			BackpackList nextList = accessor.getListByName(pageId, listName);
 			if ( nextList != null ) {
 				result.put(pageList.get(pageId), nextList.getItemsAsString());
 			}
@@ -48,13 +48,13 @@ public class ListManager {
 		return result;
 	}
 	
-	public Map<String, List<String>> getAllNextListsAsStringList() {
+	public Map<String, List<String>> getAllListsByNameAsStringList(String listName) {
 		Map<String, List<String>> result = new TreeMap<String, List<String>>();
 		
 		Map<Integer, String> pageList = accessor.getPageList();
 
 		for (Integer pageId: pageList.keySet()) {
-			BackpackList nextList = accessor.getListByName(pageId, "Next");
+			BackpackList nextList = accessor.getListByName(pageId, listName);
 			if ( nextList != null && !nextList.isEmpty() ) {
 				result.put(pageList.get(pageId), nextList.getItemsAsStringList());
 			}

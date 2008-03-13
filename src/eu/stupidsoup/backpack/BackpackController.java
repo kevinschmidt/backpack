@@ -2,6 +2,7 @@ package eu.stupidsoup.backpack;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -22,10 +23,12 @@ public class BackpackController implements Controller {
 		public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response)
 				throws ServletException, IOException {
 			
-			Map backpackModel = new HashMap();
-			backpackModel.put("allNextLists", this.listManager.getAllNextListsAsStringList());
-			return new ModelAndView("nextlists", "model", backpackModel);
+			Map<String, Map<String, List<String>>> backpackModel = new HashMap<String, Map<String, List<String>>>();
+			backpackModel.put("allNextLists", this.listManager.getAllListsByNameAsStringList("Next"));
+			backpackModel.put("allWaitLists", this.listManager.getAllListsByNameAsStringList("Waiting"));
+			backpackModel.put("allLaterLists", this.listManager.getAllListsByNameAsStringList("Later"));
 			
+			return new ModelAndView("main", "model", backpackModel);
 		}
 
 		public void setListManager(ListManager listManager) {
