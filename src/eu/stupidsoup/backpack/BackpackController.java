@@ -27,6 +27,10 @@ public class BackpackController implements Controller {
 			backpackModel.put("allNextLists", this.listManager.getAllListsByNameAsStringList("Next"));
 			backpackModel.put("allWaitLists", this.listManager.getAllListsByNameAsStringList("Waiting"));
 			backpackModel.put("allLaterLists", this.listManager.getAllListsByNameAsStringList("Later"));
+
+			Map<String, List<String>> extraMap = new HashMap<String, List<String>>();
+			extraMap.put("Inbox", this.listManager.getListByName("New", "Inbox"));
+			backpackModel.put("extraLists", extraMap);
 			
 			return new ModelAndView("main", "model", backpackModel);
 		}
