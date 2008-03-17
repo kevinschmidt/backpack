@@ -63,4 +63,8 @@ public class ListManager {
 		return result;
 	}
 	
+	public List<String> getListByName(String listName, String pageName) {
+		return this.accessor.getListByName(pageName, listName).getItemsAsStringList();
+	}
+	
 }

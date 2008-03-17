@@ -1,6 +1,7 @@
 package eu.stupidsoup.backpack.accessor;
 
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
@@ -24,8 +25,11 @@ public class AxiomAccessor implements Accessor {
 	Options serviceOptions;
 	OMFactory elementFactory;
 	
+	HashMap<String, Integer> pageCache;
+	
 
 	public AxiomAccessor() {
+		pageCache = new HashMap<String, Integer>();
 		elementFactory = OMAbstractFactory.getOMFactory();
 		
 		try {
@@ -99,10 +103,11 @@ public class AxiomAccessor implements Accessor {
 			);
 		}
 		
+		this.updatePageCache(resultMap);
 		return resultMap;
 	}
-	
-	
+
+
 	public BackpackList getListByName(Integer pageId, String listName) {
 		BackpackList itemList = new BackpackList();
 		
@@ -132,4 +137,29 @@ public class AxiomAccessor implements Accessor {
 		return itemList;
 	}
 
+
+	public BackpackList getListByName(String pageName, String listName) {
+		if (pageCache.isEmpty() ) {
+			this.updatePageCache();
+		}
+		Integer pageId = pageCache.get(pageName);
+		if (pageId == null) {
+			return null;
+		}
+		return getListByName(pageId, listName);
+	}
+
+	
+	
+	private void updatePageCache() {
+		this.updatePageCache(this.getPageList());
+	}
+	
+	private void updatePageCache(Map<Integer, String> pageMap) {
+		this.pageCache = new HashMap<String, Integer>();
+		for (Map.Entry<Integer, String> e : pageMap.entrySet()) {
+			pageCache.put(e.getValue(), e.getKey());
+		}
+	}
+	
 }

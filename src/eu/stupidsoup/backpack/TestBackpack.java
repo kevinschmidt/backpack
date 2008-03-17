@@ -25,6 +25,8 @@ public class TestBackpack {
 				}
 			}
 		}
+		
+		System.out.println(accessor.getListByName("Inbox", "New").getItemsAsStringList());
 	}
 
 }

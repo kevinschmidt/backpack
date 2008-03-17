@@ -13,4 +13,5 @@ public interface Accessor {
 	public Map<Integer, String> getPageList();
 
 	public BackpackList getListByName(Integer pageId, String listName);
+	public BackpackList getListByName(String pageName, String listName);
 }
