@@ -12,8 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
 
-import eu.stupidsoup.backpack.accessor.BackpackList;
-import eu.stupidsoup.backpack.accessor.BackpackListItem;
+
 
 public class BackpackController implements Controller {
 
