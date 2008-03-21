@@ -109,8 +109,6 @@ public class AxiomAccessor implements Accessor {
 
 
 	public BackpackList getListByName(Integer pageId, String listName) {
-		BackpackList itemList = new BackpackList();
-		
 		OMElement response = this.sendRequest( Accessor.URL_PAGE + "/" + pageId );
 		OMElement lists = response.getFirstChildWithName( new QName("page") ).getFirstChildWithName( new QName("lists") );
 		if ( lists == null ) {
@@ -119,22 +117,11 @@ public class AxiomAccessor implements Accessor {
 		for (Iterator listItr = lists.getChildrenWithName( new QName("list") ); listItr.hasNext(); ) {
 			OMElement xmlList = (OMElement) listItr.next();
 			if ( xmlList.getAttributeValue(new QName("name")).equalsIgnoreCase(listName) ) {
-				itemList.setId( Long.parseLong( xmlList.getAttributeValue(new QName("id")) ) );
-				itemList.setName( xmlList.getAttributeValue(new QName("name")) );
-					
-				Iterator items = xmlList.getFirstChildWithName( new QName("items") ).getChildrenWithName( new QName("item") );
-				while ( items.hasNext() ) {
-					OMElement xmlItem = (OMElement) items.next();
-					BackpackListItem item = new BackpackListItem();
-					item.setId( Long.parseLong( xmlItem.getAttributeValue(new QName("id")) ) );
-					item.setCompleted( Boolean.parseBoolean( xmlItem.getAttributeValue(new QName("completed")) ) );
-					item.setText( xmlItem.getText() );
-					itemList.getItemList().add( item );
-				}
+				return this.extractListFromXML(xmlList);
 			}
 		}
 		
-		return itemList;
+		return null;
 	}
 
 
@@ -147,6 +134,44 @@ public class AxiomAccessor implements Accessor {
 			return null;
 		}
 		return getListByName(pageId, listName);
+	}
+	
+	
+	public OMElement getPageByName(String pageName) {
+		if (pageCache.isEmpty() ) {
+			this.updatePageCache();
+		}
+		Integer pageId = pageCache.get(pageName);
+		if (pageId == null) {
+			return null;
+		}
+		
+		OMElement response = this.sendRequest( Accessor.URL_PAGE + "/" + pageId );
+		return response.getFirstChildWithName( new QName("page") );
+	}
+	
+	
+	public BackpackGTD getGTDByName(String pageName) {
+		BackpackGTD gtd = new BackpackGTD();
+		
+		OMElement page = this.getPageByName(pageName);
+		OMElement lists = page.getFirstChildWithName( new QName("lists") );
+		if ( lists == null ) {
+			return null;
+		}
+		for (Iterator listItr = lists.getChildrenWithName( new QName("list") ); listItr.hasNext(); ) {
+			OMElement xmlList = (OMElement) listItr.next();
+			if ( xmlList.getAttributeValue(new QName("name")).equalsIgnoreCase("Next") ) {
+				gtd.setNextList(this.extractListFromXML(xmlList));
+			}
+			if ( xmlList.getAttributeValue(new QName("name")).equalsIgnoreCase("Waiting") ) {
+				gtd.setWaitingList(this.extractListFromXML(xmlList));
+			}
+			if ( xmlList.getAttributeValue(new QName("name")).equalsIgnoreCase("Later") ) {
+				gtd.setLaterList(this.extractListFromXML(xmlList));
+			}
+		}
+		return gtd;
 	}
 
 	
@@ -162,4 +187,22 @@ public class AxiomAccessor implements Accessor {
 		}
 	}
 	
+	private BackpackList extractListFromXML(OMElement xmlList) {
+		BackpackList itemList = new BackpackList();
+		itemList.setId( Long.parseLong( xmlList.getAttributeValue(new QName("id")) ) );
+		itemList.setName( xmlList.getAttributeValue(new QName("name")) );
+			
+		Iterator items = xmlList.getFirstChildWithName( new QName("items") ).getChildrenWithName( new QName("item") );
+		while ( items.hasNext() ) {
+			OMElement xmlItem = (OMElement) items.next();
+			BackpackListItem item = new BackpackListItem();
+			item.setId( Long.parseLong( xmlItem.getAttributeValue(new QName("id")) ) );
+			item.setCompleted( Boolean.parseBoolean( xmlItem.getAttributeValue(new QName("completed")) ) );
+			item.setText( xmlItem.getText() );
+			itemList.getItemList().add( item );
+		}
+		
+		return itemList;
+	}
+
 }

@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import eu.stupidsoup.backpack.accessor.Accessor;
+import eu.stupidsoup.backpack.accessor.BackpackGTD;
 import eu.stupidsoup.backpack.accessor.BackpackList;
 
 public class ListManager {
@@ -66,5 +67,10 @@ public class ListManager {
 	public List<String> getListByName(String listName, String pageName) {
 		return this.accessor.getListByName(pageName, listName).getItemsAsStringList();
 	}
+	
+	public Map<String, BackpackGTD> getGTDLists() {
+		return null;
+	}
+	
 	
 }

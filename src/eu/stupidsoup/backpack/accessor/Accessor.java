@@ -14,4 +14,6 @@ public interface Accessor {
 
 	public BackpackList getListByName(Integer pageId, String listName);
 	public BackpackList getListByName(String pageName, String listName);
+	
+	public BackpackGTD getGTDByName(String pageName);
 }
