@@ -1,9 +1,12 @@
 package eu.stupidsoup.backpack.accessor;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 import javax.xml.namespace.QName;
@@ -25,7 +28,7 @@ public class AxiomAccessor implements Accessor {
 	Options serviceOptions;
 	OMFactory elementFactory;
 	
-	HashMap<String, Integer> pageCache;
+	Map<String, Integer> pageCache;
 	
 
 	public AxiomAccessor() {
@@ -65,46 +68,16 @@ public class AxiomAccessor implements Accessor {
 	}
 
 
-	
-	private OMElement prepareRequestObject() {
-        OMElement rootElement = elementFactory.createOMElement("request", null);
-        OMElement tokenElement = elementFactory.createOMElement("token", null, rootElement);
-        tokenElement.setText(this.apiKey);
-        return rootElement;
+
+	public Map<String, Integer> getPageMap() {
+		this.updatePageCache();
+		return this.pageCache;
 	}
 	
 	
-	private OMElement sendRequest(String urlPart) {
-		try {
-			serviceOptions.setTo( new EndpointReference( this.url + urlPart ) );
-			OMElement response = serviceClient.sendReceive( this.prepareRequestObject() );
-			if ( !response.getAttributeValue( new QName("success") ).equalsIgnoreCase("true") ) {
-				throw new RuntimeException("Server responded with failure");
-			}
-			return response;
-		} catch (AxisFault e) {
-			e.printStackTrace();
-			throw new RuntimeException("Problem sending request.");
-		}
-	}
-
-
-	
-	public Map<Integer, String> getPageList() {
-		Map<Integer, String> resultMap = new TreeMap<Integer, String>();
-
-		OMElement response = this.sendRequest( Accessor.URL_PAGES_ALL );			
-		OMElement pages = response.getFirstChildWithName( new QName("pages") );
-		for (Iterator children = pages.getChildrenWithName( new QName("page") ); children.hasNext(); ) {
-			OMElement child = (OMElement) children.next();
-			resultMap.put(
-				Integer.parseInt( child.getAttributeValue( new QName("id") ) ),
-				child.getAttributeValue( new QName("title") )
-			);
-		}
-		
-		this.updatePageCache(resultMap);
-		return resultMap;
+	public Set<String> getPageNames() {
+		this.updatePageCache();
+		return this.pageCache.keySet();
 	}
 
 
@@ -157,7 +130,7 @@ public class AxiomAccessor implements Accessor {
 		OMElement page = this.getPageByName(pageName);
 		OMElement lists = page.getFirstChildWithName( new QName("lists") );
 		if ( lists == null ) {
-			return null;
+			return gtd;
 		}
 		for (Iterator listItr = lists.getChildrenWithName( new QName("list") ); listItr.hasNext(); ) {
 			OMElement xmlList = (OMElement) listItr.next();
@@ -177,13 +150,8 @@ public class AxiomAccessor implements Accessor {
 	
 	
 	private void updatePageCache() {
-		this.updatePageCache(this.getPageList());
-	}
-	
-	private void updatePageCache(Map<Integer, String> pageMap) {
-		this.pageCache = new HashMap<String, Integer>();
-		for (Map.Entry<Integer, String> e : pageMap.entrySet()) {
-			pageCache.put(e.getValue(), e.getKey());
+		if (pageCache.isEmpty() ) {
+			this.pageCache.putAll( this.getFullPageList() );
 		}
 	}
 	
@@ -203,6 +171,45 @@ public class AxiomAccessor implements Accessor {
 		}
 		
 		return itemList;
+	}
+	
+	private Map<String, Integer> getFullPageList() {
+		Map<String, Integer> resultMap = new HashMap<String, Integer>();
+
+		OMElement response = this.sendRequest( Accessor.URL_PAGES_ALL );			
+		OMElement pages = response.getFirstChildWithName( new QName("pages") );
+		for (Iterator children = pages.getChildrenWithName( new QName("page") ); children.hasNext(); ) {
+			OMElement child = (OMElement) children.next();
+			resultMap.put(
+				child.getAttributeValue( new QName("title") ),
+				Integer.parseInt( child.getAttributeValue( new QName("id") ) )
+			);
+		}
+		
+		return resultMap;
+	}
+	
+	
+	private OMElement prepareRequestObject() {
+        OMElement rootElement = elementFactory.createOMElement("request", null);
+        OMElement tokenElement = elementFactory.createOMElement("token", null, rootElement);
+        tokenElement.setText(this.apiKey);
+        return rootElement;
+	}
+	
+	
+	private OMElement sendRequest(String urlPart) {
+		try {
+			serviceOptions.setTo( new EndpointReference( this.url + urlPart ) );
+			OMElement response = serviceClient.sendReceive( this.prepareRequestObject() );
+			if ( !response.getAttributeValue( new QName("success") ).equalsIgnoreCase("true") ) {
+				throw new RuntimeException("Server responded with failure");
+			}
+			return response;
+		} catch (AxisFault e) {
+			e.printStackTrace();
+			throw new RuntimeException("Problem sending request.");
+		}
 	}
 
 }

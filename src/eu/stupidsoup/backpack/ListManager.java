@@ -1,7 +1,9 @@
 package eu.stupidsoup.backpack;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 import eu.stupidsoup.backpack.accessor.Accessor;
@@ -20,12 +22,12 @@ public class ListManager {
 	public Map<String, BackpackList> getAllListsByName(String listName) {
 		Map<String, BackpackList> result = new TreeMap<String, BackpackList>();
 		
-		Map<Integer, String> pageList = accessor.getPageList();
+		Map<String, Integer> pageList = accessor.getPageMap();
 
-		for (Integer pageId: pageList.keySet()) {
-			BackpackList nextList = accessor.getListByName(pageId, listName);
+		for (Map.Entry<String, Integer> pageEntry: pageList.entrySet()) {
+			BackpackList nextList = accessor.getListByName(pageEntry.getValue(), listName);
 			if ( nextList != null ) {
-				result.put(pageList.get(pageId), nextList);
+				result.put(pageEntry.getKey(), nextList);
 			}
 		}
 		
@@ -37,12 +39,12 @@ public class ListManager {
 	public Map<String, String> getAllListsByNameAsString(String listName) {
 		Map<String, String> result = new TreeMap<String, String>();
 		
-		Map<Integer, String> pageList = accessor.getPageList();
+		Map<String, Integer> pageList = accessor.getPageMap();
 
-		for (Integer pageId: pageList.keySet()) {
-			BackpackList nextList = accessor.getListByName(pageId, listName);
+		for (Map.Entry<String, Integer> pageEntry: pageList.entrySet()) {
+			BackpackList nextList = accessor.getListByName(pageEntry.getValue(), listName);
 			if ( nextList != null ) {
-				result.put(pageList.get(pageId), nextList.getItemsAsString());
+				result.put(pageEntry.getKey(), nextList.getItemsAsString());
 			}
 		}
 		
@@ -52,12 +54,12 @@ public class ListManager {
 	public Map<String, List<String>> getAllListsByNameAsStringList(String listName) {
 		Map<String, List<String>> result = new TreeMap<String, List<String>>();
 		
-		Map<Integer, String> pageList = accessor.getPageList();
+		Map<String, Integer> pageList = accessor.getPageMap();
 
-		for (Integer pageId: pageList.keySet()) {
-			BackpackList nextList = accessor.getListByName(pageId, listName);
+		for (Map.Entry<String, Integer> pageEntry: pageList.entrySet()) {
+			BackpackList nextList = accessor.getListByName(pageEntry.getValue(), listName);
 			if ( nextList != null && !nextList.isEmpty() ) {
-				result.put(pageList.get(pageId), nextList.getItemsAsStringList());
+				result.put(pageEntry.getKey(), nextList.getItemsAsStringList());
 			}
 		}
 		
@@ -69,7 +71,12 @@ public class ListManager {
 	}
 	
 	public Map<String, BackpackGTD> getGTDLists() {
-		return null;
+		Map<String, BackpackGTD> result = new HashMap<String, BackpackGTD>();
+		Set<String> pageList = accessor.getPageNames();
+		for(String pageName : pageList) {
+			result.put(pageName, accessor.getGTDByName(pageName));
+		}
+		return result;
 	}
 	
 	

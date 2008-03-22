@@ -1,6 +1,7 @@
 package eu.stupidsoup.backpack;
 
 import java.util.Map;
+import java.util.Set;
 
 import eu.stupidsoup.backpack.accessor.Accessor;
 import eu.stupidsoup.backpack.accessor.AxiomAccessor;
@@ -15,10 +16,10 @@ public class TestBackpack {
 		Accessor accessor = new AxiomAccessor();
 		accessor.setCredentials("https://soup.backpackit.com/", "8e549ba5fe851d32ac8ab12d143c19ab723b5002");
 
-		Map<Integer, String> pageList = accessor.getPageList();
+		Set<String> pageList = accessor.getPageNames();
 		System.out.println(pageList);
-		for (Integer pageId: pageList.keySet()) {
-			BackpackList nextList = accessor.getListByName(pageId, "Next");
+		for (String pageName: pageList) {
+			BackpackList nextList = accessor.getListByName(pageName, "Next");
 			if ( nextList != null ) {
 				for (BackpackListItem i: nextList) {
 					System.out.println(i.getText());
@@ -27,6 +28,10 @@ public class TestBackpack {
 		}
 		
 		System.out.println(accessor.getListByName("Inbox", "New").getItemsAsStringList());
+		
+		ListManager lm = new ListManager();
+		lm.setBackpackAccessor(accessor);
+		System.out.println(lm.getGTDLists());
 	}
 
 }
