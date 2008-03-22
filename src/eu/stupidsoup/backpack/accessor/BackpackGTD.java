@@ -49,4 +49,14 @@ public class BackpackGTD {
 		}
 		return false;
 	}
+	
+	public String toString() {
+		StringBuffer sb = new StringBuffer();
+		sb.append( (this.nextList != null) ? this.nextList.getItemsAsString() : "" );
+		sb.append("\n");
+		sb.append( (this.waitingList != null) ? this.waitingList.getItemsAsString() : "" );
+		sb.append("\n");
+		sb.append( (this.laterList != null) ? this.laterList.getItemsAsString() : "" );
+		return sb.toString();
+	}
 }

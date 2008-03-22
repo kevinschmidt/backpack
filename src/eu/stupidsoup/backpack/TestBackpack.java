@@ -5,6 +5,7 @@ import java.util.Set;
 
 import eu.stupidsoup.backpack.accessor.Accessor;
 import eu.stupidsoup.backpack.accessor.AxiomAccessor;
+import eu.stupidsoup.backpack.accessor.BackpackGTD;
 import eu.stupidsoup.backpack.accessor.BackpackList;
 import eu.stupidsoup.backpack.accessor.BackpackListItem;
 
@@ -31,7 +32,11 @@ public class TestBackpack {
 		
 		ListManager lm = new ListManager();
 		lm.setBackpackAccessor(accessor);
-		System.out.println(lm.getGTDLists());
+		Map<String, BackpackGTD> gtd = lm.getGTDLists();
+		for (Map.Entry<String, BackpackGTD> entry: gtd.entrySet()) {
+			System.out.println("*" + entry.getKey());
+			System.out.println(entry.getValue());
+		}
 	}
 
 }

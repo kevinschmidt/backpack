@@ -52,9 +52,11 @@ public class BackpackList implements Iterable<BackpackListItem> {
 	public String getItemsAsString() {
 		StringBuffer result = new StringBuffer();
 		
-		for (BackpackListItem item : this.items) {
-			result.append(item.getText());
-			result.append(", ");
+		for (Iterator<BackpackListItem> i = this.items.iterator(); i.hasNext(); ) {
+			result.append(i.next().getText());
+			if (i.hasNext()) {
+				result.append(",");
+			}
 		}
 		
 		return result.toString();
