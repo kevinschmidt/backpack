@@ -22,10 +22,9 @@ public class BackpackController implements Controller {
 		public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response)
 				throws ServletException, IOException {
 			
-			Map<String, Map<String, List<String>>> backpackModel = new HashMap<String, Map<String, List<String>>>();
-			backpackModel.put("allNextLists", this.listManager.getAllListsByNameAsStringList("Next"));
-			backpackModel.put("allWaitLists", this.listManager.getAllListsByNameAsStringList("Waiting"));
-			backpackModel.put("allLaterLists", this.listManager.getAllListsByNameAsStringList("Later"));
+			Map<String, Map> backpackModel = new HashMap<String, Map>();
+			backpackModel.put("gtdLists", this.listManager.getGTDLists());
+
 
 			Map<String, List<String>> extraMap = new HashMap<String, List<String>>();
 			extraMap.put("Inbox", this.listManager.getListByName("New", "Inbox"));
