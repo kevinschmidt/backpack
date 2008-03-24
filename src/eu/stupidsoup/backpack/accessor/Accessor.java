@@ -1,7 +1,7 @@
 package eu.stupidsoup.backpack.accessor;
 
 import java.util.Map;
-import java.util.Set;
+import java.util.SortedSet;
 
 
 
@@ -14,7 +14,7 @@ public interface Accessor {
 	public void setCredentials(String url, String apiKey);
 	
 	public Map<String, Integer> getPageMap();
-	public Set<String> getPageNames();
+	public SortedSet<String> getPageNames();
 
 	public BackpackList getListByName(Integer pageId, String listName);
 	public BackpackList getListByName(String pageName, String listName);

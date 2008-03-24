@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedSet;
 import java.util.TreeMap;
 
 import eu.stupidsoup.backpack.accessor.Accessor;
@@ -72,9 +73,12 @@ public class ListManager {
 	
 	public Map<String, BackpackGTD> getGTDLists() {
 		Map<String, BackpackGTD> result = new HashMap<String, BackpackGTD>();
-		Set<String> pageList = accessor.getPageNames();
+		SortedSet<String> pageList = accessor.getPageNames();
 		for(String pageName : pageList) {
-			result.put(pageName, accessor.getGTDByName(pageName));
+			BackpackGTD gtd = accessor.getGTDByName(pageName);
+			if (!gtd.isEmpty()) {
+				result.put(pageName, gtd);
+			}
 		}
 		return result;
 	}

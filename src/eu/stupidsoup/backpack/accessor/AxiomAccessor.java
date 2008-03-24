@@ -7,7 +7,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedSet;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 import javax.xml.namespace.QName;
 
@@ -32,7 +34,7 @@ public class AxiomAccessor implements Accessor {
 	
 
 	public AxiomAccessor() {
-		pageCache = new HashMap<String, Integer>();
+		pageCache = new TreeMap<String, Integer>();
 		elementFactory = OMAbstractFactory.getOMFactory();
 		
 		try {
@@ -75,9 +77,9 @@ public class AxiomAccessor implements Accessor {
 	}
 	
 	
-	public Set<String> getPageNames() {
+	public SortedSet<String> getPageNames() {
 		this.updatePageCache();
-		return this.pageCache.keySet();
+		return new TreeSet<String>(this.pageCache.keySet());
 	}
 
 

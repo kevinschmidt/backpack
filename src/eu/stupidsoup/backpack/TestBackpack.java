@@ -36,6 +36,7 @@ public class TestBackpack {
 		for (Map.Entry<String, BackpackGTD> entry: gtd.entrySet()) {
 			System.out.println("*" + entry.getKey());
 			System.out.println(entry.getValue());
+			System.out.println(entry.getValue().isEmpty());
 		}
 	}
 
