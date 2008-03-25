@@ -48,6 +48,9 @@
             <src path="${src.dir}"/>
             <classpath refid="master-classpath"/>
         </javac>
+	<delete includeemptydirs="true">
+	    <fileset dir="${web.dir}/WEB-INF/lib/" includes="**/*"/>
+	</delete>
     	<copy todir="${web.dir}/WEB-INF/lib/" flatten="true">
     	    <fileset dir="${lib.dir}">
     	    	<include name="**/*.*"/>
