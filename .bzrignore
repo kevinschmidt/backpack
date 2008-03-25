@@ -68,3 +68,5 @@
 ./WebContent/WEB-INF/lib/xercesImpl-2.8.1.jar
 ./WebContent/WEB-INF/lib/xml-apis-1.3.03.jar
 backpack.war
+WebContent/WEB-INF/lib/spring-test.jar
+WebContent/WEB-INF/lib/spring-webmvc.jar
