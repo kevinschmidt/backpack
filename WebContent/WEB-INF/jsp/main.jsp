@@ -3,6 +3,11 @@
 <html>
 <head>
 <title>Backpack</title>
+
+<style>
+    tr.odd	{background-color: rgb( 149, 206, 145 );}
+    tr.even	{background-color: rgb( 189, 246, 185 );}
+</style>
 </head>
 
 
@@ -18,9 +23,9 @@
 		<th width="30%">Later List</th>
 	</tr>
 
-	<c:forEach var="gtdList" items="${model.gtdLists}">
-		<tr valign="top">
-			<td>${gtdList.key}</td>
+	<c:forEach var="gtdList" items="${model.gtdLists}" varStatus="status">
+		<tr valign="top" class="${status.index%2==0 ? 'odd' : 'even'}">
+			<td><strong>${gtdList.key}</strong></td>
 			<td><c:if test="${gtdList.value.nextList != null}">
 				<ul>
 					<c:forEach var="item"
@@ -47,6 +52,8 @@
 			</c:if></td>
 		</tr>
 	</c:forEach>
+
+	<tr><td><br/></td></tr>
 
 	<tr valign="top">
 		<td width="10%" align="center"><b>Inbox</b></td>
