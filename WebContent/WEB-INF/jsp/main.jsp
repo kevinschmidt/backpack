@@ -57,6 +57,7 @@
 
 	<tr valign="top">
 		<td width="10%" align="center"><b>Other</b></td>
+		<th width="30%">List</th>
 	</tr>
 	<c:forEach var="map" items="${model.extraLists}">
 		<tr valign="top" class="${status.index%2==0 ? 'odd' : 'even'}">
