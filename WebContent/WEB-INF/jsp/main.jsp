@@ -56,28 +56,21 @@
 	<tr><td><br/></td></tr>
 
 	<tr valign="top">
-		<td width="10%" align="center"><b>Inbox</b></td>
+		<td width="10%" align="center"><b>Other</b></td>
 	</tr>
-	<tr valign="top">
+	<c:forEach var="map" items="${model.extraLists}">
+		<tr valign="top" class="${status.index%2==0 ? 'odd' : 'even'}">
+			<td><strong>${map.key}</strong></td>
+			<td>
+				<ul>
+					<c:forEach var="item" items="${map.value}">
+						<li>${item}</li>
+					</c:forEach>
+				</ul>
+			</td>
+		</tr>
+	</c:forEach>
 
-		<td>
-		<table>
-			<c:forEach var="map" items="${model.extraLists}">
-				<tr valign="top">
-					<td>${map.key}</td>
-					<td>
-					<ul>
-						<c:forEach var="item" items="${map.value}">
-							<li>${item}</li>
-						</c:forEach>
-					</ul>
-					</td>
-				</tr>
-			</c:forEach>
-		</table>
-		</td>
-
-	</tr>
 </table>
 
 </body>
