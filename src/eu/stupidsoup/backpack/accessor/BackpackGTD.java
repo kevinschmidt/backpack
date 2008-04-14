@@ -5,10 +5,15 @@ import java.util.List;
 
 public class BackpackGTD {
 	private String pageName;
+	private List<String> pageTags;
 	private BackpackList nextList;
 	private BackpackList waitingList;
 	private BackpackList laterList;
 	
+	
+	public BackpackGTD() {
+		pageTags = new ArrayList<String>();
+	}
 	
 	public String getPageName() {
 		return pageName;
@@ -16,6 +21,19 @@ public class BackpackGTD {
 	public void setPageName(String pageName) {
 		this.pageName = pageName;
 	}
+	public List<String> getPageTags() {
+		return pageTags;
+	}
+	public void setPageTags(List<String> pageTags) {
+		this.pageTags = pageTags;
+	}
+	public void addPageTag(String pageTag) {
+		this.pageTags.add(pageTag);
+	}
+	public boolean hasTag(String pageTag) {
+		return this.pageTags.contains(pageTag);
+	}
+	
 	public BackpackList getNextList() {
 		return nextList;
 	}

@@ -23,7 +23,9 @@ public class BackpackController implements Controller {
 				throws ServletException, IOException {
 			
 			Map<String, Map> backpackModel = new HashMap<String, Map>();
-			backpackModel.put("gtdLists", this.listManager.getGTDLists());
+			backpackModel.put("privateLists", this.listManager.getGTDListsByTag("private"));
+			backpackModel.put("halfPrivateLists", this.listManager.getGTDListsByTag("halfprivate"));
+			backpackModel.put("workLists", this.listManager.getGTDListsByTag("work"));
 
 
 			Map<String, List<String>> extraMap = new HashMap<String, List<String>>();

@@ -128,8 +128,11 @@ public class AxiomAccessor implements Accessor {
 	
 	public BackpackGTD getGTDByName(String pageName) {
 		BackpackGTD gtd = new BackpackGTD();
+		gtd.setPageName(pageName);
 		
 		OMElement page = this.getPageByName(pageName);
+		gtd.setPageTags(this.extractTagsFromXML( page.getFirstChildWithName( new QName("tags") ) ));
+		
 		OMElement lists = page.getFirstChildWithName( new QName("lists") );
 		if ( lists == null ) {
 			return gtd;
@@ -173,6 +176,21 @@ public class AxiomAccessor implements Accessor {
 		}
 		
 		return itemList;
+	}
+	
+	private List<String> extractTagsFromXML(OMElement xmlList) {
+		List<String> tagList = new ArrayList<String>();
+		if (xmlList == null) {
+			return tagList;
+		}
+		
+		Iterator items = xmlList.getChildrenWithName( new QName("tag") );
+		while ( items.hasNext() ) {
+			OMElement xmlItem = (OMElement) items.next();
+			tagList.add( xmlItem.getAttributeValue(new QName("name")) );
+		}
+		
+		return tagList;
 	}
 	
 	private Map<String, Integer> getFullPageList() {

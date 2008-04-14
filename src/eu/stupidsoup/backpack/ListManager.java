@@ -83,6 +83,19 @@ public class ListManager {
 		}
 		return result;
 	}
+
+
+	public Map<String, BackpackGTD> getGTDListsByTag(String tagName) {
+		SortedMap<String, BackpackGTD> result = new TreeMap<String, BackpackGTD>();
+		Set<String> pageList = accessor.getPageNames();
+		for(String pageName : pageList) {
+			BackpackGTD gtd = accessor.getGTDByName(pageName);
+			if (gtd.hasTag(tagName) && !gtd.isEmpty()) {
+				result.put(pageName, gtd);
+			}
+		}
+		return result;
+	}
 	
 	
 }

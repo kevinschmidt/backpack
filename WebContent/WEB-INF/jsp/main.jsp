@@ -1,4 +1,4 @@
-<%@ include file="/WEB-INF/jsp/include.jsp"%>
+<%@ include file="/WEB-INF/jsp/include.jsp" %>
 
 <html>
 <head>
@@ -23,34 +23,8 @@
 		<th width="30%">Later List</th>
 	</tr>
 
-	<c:forEach var="gtdList" items="${model.gtdLists}" varStatus="status">
-		<tr valign="top" class="${status.index%2==0 ? 'odd' : 'even'}">
-			<td><strong>${gtdList.key}</strong></td>
-			<td><c:if test="${gtdList.value.nextList != null}">
-				<ul>
-					<c:forEach var="item"
-						items="${gtdList.value.nextList.itemsAsStringList}">
-						<li>${item}</li>
-					</c:forEach>
-				</ul>
-			</c:if></td>
-			<td><c:if test="${gtdList.value.waitingList != null}">
-				<ul>
-					<c:forEach var="item"
-						items="${gtdList.value.waitingList.itemsAsStringList}">
-						<li>${item}</li>
-					</c:forEach>
-				</ul>
-			</c:if></td>
-			<td><c:if test="${gtdList.value.laterList != null}">
-				<ul>
-					<c:forEach var="item"
-						items="${gtdList.value.laterList.itemsAsStringList}">
-						<li>${item}</li>
-					</c:forEach>
-				</ul>
-			</c:if></td>
-		</tr>
+	<c:forEach var="gtdList" items="${model.workLists}" varStatus="status">
+		<%@ include file="/WEB-INF/jsp/gtddisplay.jsp" %>
 	</c:forEach>
 
 	<tr><td><br/></td></tr>
