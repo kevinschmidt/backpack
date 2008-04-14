@@ -17,12 +17,31 @@
 
 <table width="100%">
 	<tr valign="top">
-		<th width="10%">Page</th>
-		<th width="30%">Next List</th>
-		<th width="30%">Waiting List</th>
-		<th width="30%">Later List</th>
+		<td width="10%"><strong>Private</strong></td>
+		<td width="30%"><strong>Next List</strong></td>
+		<td width="30%"><strong>Waiting List</strong></td>
+		<td width="30%"><strong>Later List</strong></td>
 	</tr>
-
+	<c:forEach var="gtdList" items="${model.privateLists}" varStatus="status">
+		<%@ include file="/WEB-INF/jsp/gtddisplay.jsp" %>
+	</c:forEach>
+	
+	<tr valign="top">
+		<td width="10%"><strong>Half-Private</strong></td>
+		<td width="30%"><strong>Next List</strong></td>
+		<td width="30%"><strong>Waiting List</strong></td>
+		<td width="30%"><strong>Later List</strong></td>
+	</tr>
+	<c:forEach var="gtdList" items="${model.halfPrivateLists}" varStatus="status">
+		<%@ include file="/WEB-INF/jsp/gtddisplay.jsp" %>
+	</c:forEach>
+	
+	<tr valign="top">
+		<td width="10%"><strong>Work</strong></td>
+		<td width="30%"><strong>Next List</strong></td>
+		<td width="30%"><strong>Waiting List</strong></td>
+		<td width="30%"><strong>Later List</strong></td>
+	</tr>
 	<c:forEach var="gtdList" items="${model.workLists}" varStatus="status">
 		<%@ include file="/WEB-INF/jsp/gtddisplay.jsp" %>
 	</c:forEach>
