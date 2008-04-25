@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 public class BackpackList implements Iterable<BackpackListItem> {
-	private Long id;
+	private Long listId;
 	private String name;
 	
 	private List<BackpackListItem> items;
@@ -15,12 +15,12 @@ public class BackpackList implements Iterable<BackpackListItem> {
 		this.items = new ArrayList<BackpackListItem>();
 	}
 	
-	public Long getId() {
-		return id;
+	public Long getlistId() {
+		return listId;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public void setListId(Long id) {
+		this.listId = id;
 	}
 
 	public String getName() {

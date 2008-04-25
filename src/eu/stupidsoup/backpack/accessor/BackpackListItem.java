@@ -1,17 +1,17 @@
 package eu.stupidsoup.backpack.accessor;
 
 public class BackpackListItem {
-	Long id;
+	Long itemId;
 	Boolean completed;
 	String text;
 	
 	
-	public Long getId() {
-		return id;
+	public Long getItemId() {
+		return itemId;
 	}
 	
-	public void setId(Long id) {
-		this.id = id;
+	public void setItemId(Long id) {
+		this.itemId = id;
 	}
 	
 	public Boolean getCompleted() {

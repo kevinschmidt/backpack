@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="eu.stupidsoup.backpack.accessor.BackpackGTD" table="gtd">
+		<id name="gtdId">
+			<generator class="native" />
+		</id>
+		<property name="pageName" />
+		<property name="pageName" />
+		<set name="itemList" inverse="true">
+        	<key column="listId"/>
+        	<one-to-many class="eu.stupidsoup.backpack.accessor.BackpackListItem"/>
+    	</set>
+    	<set name="itemList" inverse="true">
+        	<key column="listId"/>
+        	<one-to-many class="eu.stupidsoup.backpack.accessor.BackpackListItem"/>
+    	</set>
+    	<set name="itemList" inverse="true">
+        	<key column="listId"/>
+        	<one-to-many class="eu.stupidsoup.backpack.accessor.BackpackListItem"/>
+    	</set>
+		
+		<many-to-one name="list" column="listId" not-null="true" />
+	</class>
+	
+	<class name="eu.stupidsoup.backpack.accessor.BackpackList" table="list">
+		<id name="listId" />
+		<property name="name" />
+		<set name="itemList" inverse="true">
+        	<key column="listId"/>
+        	<one-to-many class="eu.stupidsoup.backpack.accessor.BackpackListItem"/>
+    	</set>
+    	
+    	<many-to-one name="gtd" column="gtdId" not-null="true" />
+	</class>
+	
+	<class name="eu.stupidsoup.backpack.accessor.BackpackListItem" table="item">
+		<id name="itemId" />
+		<property name="completed" />
+		<property name="text" />
+		
+		<many-to-one name="list" column="listId" not-null="true" />
+	</class>
+</hibernate-mapping>

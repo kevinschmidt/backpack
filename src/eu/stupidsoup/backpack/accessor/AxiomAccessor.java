@@ -162,14 +162,14 @@ public class AxiomAccessor implements Accessor {
 	
 	private BackpackList extractListFromXML(OMElement xmlList) {
 		BackpackList itemList = new BackpackList();
-		itemList.setId( Long.parseLong( xmlList.getAttributeValue(new QName("id")) ) );
+		itemList.setListId( Long.parseLong( xmlList.getAttributeValue(new QName("id")) ) );
 		itemList.setName( xmlList.getAttributeValue(new QName("name")) );
 			
 		Iterator items = xmlList.getFirstChildWithName( new QName("items") ).getChildrenWithName( new QName("item") );
 		while ( items.hasNext() ) {
 			OMElement xmlItem = (OMElement) items.next();
 			BackpackListItem item = new BackpackListItem();
-			item.setId( Long.parseLong( xmlItem.getAttributeValue(new QName("id")) ) );
+			item.setItemId( Long.parseLong( xmlItem.getAttributeValue(new QName("id")) ) );
 			item.setCompleted( Boolean.parseBoolean( xmlItem.getAttributeValue(new QName("completed")) ) );
 			item.setText( xmlItem.getText() );
 			itemList.getItemList().add( item );

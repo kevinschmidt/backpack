@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BackpackGTD {
+	private Long gtdId;
 	private String pageName;
 	private List<String> pageTags;
 	private BackpackList nextList;
@@ -15,6 +16,13 @@ public class BackpackGTD {
 		pageTags = new ArrayList<String>();
 	}
 	
+	
+	private Long getGtdId() {
+		return gtdId;
+	}
+	private void setGtdId(Long gtdId) {
+		this.gtdId = gtdId;
+	}
 	public String getPageName() {
 		return pageName;
 	}
