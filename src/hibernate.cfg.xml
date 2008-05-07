@@ -5,17 +5,26 @@
 
 <hibernate-configuration>
 	<session-factory>
-        <property name="connection.datasource">java:/comp/env/jdbc/backpack</property>
-        <property name="dialect">org.hibernate.dialect.PostgreSQLDialect</property>
-        <property name="current_session_context_class">thread</property>
-        <property name="hbm2ddl.auto">update</property>
+		<!--<property name="connection.datasource">java:/comp/env/jdbc/backpack</property>-->
         
-        <property name="show_sql">true</property>
-        <property name="format_sql">true</property>
+		<property name="connection.url">jdbc:postgresql://localhost/backpack</property>
+		<property name="connection.driver_class">org.postgresql.Driver</property>
+		<property name="connection.username">backpack</property>
+		<property name="connection.password">back12</property>
+ 
+		<property name="dialect">org.hibernate.dialect.PostgreSQLDialect</property>
+		<property name="transaction.factory_class">org.hibernate.transaction.JDBCTransactionFactory</property>
+		<property name="current_session_context_class">thread</property>
+		<property name="hbm2ddl.auto">update</property>
+		
+		<property name="show_sql">true</property>
+		<property name="format_sql">true</property>
 		<property name="use_sql_comments">true</property>
 		<property name="generate_statistics">true</property>
 		
-        <mapping resource="eu/stupidsoup/backpack/accessor/backpack.hbm.xml"/>
+		<mapping package="eu.stupidsoup.backpack.accessor" />
+		<mapping class="eu.stupidsoup.backpack.accessor.BackpackListItem" />
+		<mapping class="eu.stupidsoup.backpack.accessor.BackpackList" />
     </session-factory>
 
 </hibernate-configuration>

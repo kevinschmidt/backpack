@@ -3,6 +3,15 @@ package eu.stupidsoup.backpack.accessor;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Lob;
+import javax.persistence.Table;
+
+
+
+@Entity @Table(name="gtd")
 public class BackpackGTD {
 	private Long gtdId;
 	private String pageName;
@@ -16,13 +25,15 @@ public class BackpackGTD {
 		pageTags = new ArrayList<String>();
 	}
 	
-	
+	@Id @GeneratedValue
 	private Long getGtdId() {
 		return gtdId;
 	}
 	private void setGtdId(Long gtdId) {
 		this.gtdId = gtdId;
 	}
+	
+	@Lob
 	public String getPageName() {
 		return pageName;
 	}
