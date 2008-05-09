@@ -3,21 +3,34 @@ package eu.stupidsoup.backpack.accessor;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Lob;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 
 
 @Entity @Table(name="gtd")
 public class BackpackGTD {
+	@Id @GeneratedValue
+	@SuppressWarnings("unused")
 	private Long gtdId;
 	private String pageName;
+	@Transient
 	private List<String> pageTags;
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name="next_list_listid")
 	private BackpackList nextList;
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name="waiting_list_listid")
 	private BackpackList waitingList;
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name="later_list_listid")
 	private BackpackList laterList;
 	
 	
@@ -25,15 +38,7 @@ public class BackpackGTD {
 		pageTags = new ArrayList<String>();
 	}
 	
-	@Id @GeneratedValue
-	private Long getGtdId() {
-		return gtdId;
-	}
-	private void setGtdId(Long gtdId) {
-		this.gtdId = gtdId;
-	}
 	
-	@Lob
 	public String getPageName() {
 		return pageName;
 	}

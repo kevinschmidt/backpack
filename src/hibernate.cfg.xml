@@ -25,6 +25,7 @@
 		<mapping package="eu.stupidsoup.backpack.accessor" />
 		<mapping class="eu.stupidsoup.backpack.accessor.BackpackListItem" />
 		<mapping class="eu.stupidsoup.backpack.accessor.BackpackList" />
+		<mapping class="eu.stupidsoup.backpack.accessor.BackpackGTD" />
     </session-factory>
 
 </hibernate-configuration>

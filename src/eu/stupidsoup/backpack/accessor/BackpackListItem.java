@@ -23,7 +23,7 @@ public class BackpackListItem implements Serializable {
 	@Lob
 	private String text;
 	@ManyToOne(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
-//	@JoinColumn(nullable=false)
+	@JoinColumn(nullable=false)
 	private BackpackList list;
 
 	

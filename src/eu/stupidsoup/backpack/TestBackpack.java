@@ -24,11 +24,12 @@ public class TestBackpack {
 		Session session = HibernateUtil.getSession();
 		Transaction trans = session.beginTransaction();
 		
-		BackpackList test = accessor.getListByName("Inbox", "New");
-		System.out.println(test.getItemsAsStringList());
-		test.getItemList().first().setList(test);
+		//BackpackList test = accessor.getListByName("Inbox", "New");
+		//System.out.println(test.getItemsAsStringList());
+		//test.getItemList().first().setList(test);
+		BackpackGTD gtd = accessor.getGTDByName("Personal");
 		
-		session.save(test);
+		session.save(gtd);
 		trans.commit();
 		session.close();
 	}
