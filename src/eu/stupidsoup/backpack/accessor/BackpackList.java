@@ -1,33 +1,43 @@
 package eu.stupidsoup.backpack.accessor;
 
+import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+
+import org.hibernate.annotations.Sort;
+import org.hibernate.annotations.SortType;
 
 
 
 @Entity @Table(name="list")
-public class BackpackList implements Iterable<BackpackListItem> {
+public class BackpackList implements Iterable<BackpackListItem>, Serializable {
+	private static final long serialVersionUID = 1L;
+
+	@Id
 	private Long listId;
 	private String name;
-	
-	private Set<BackpackListItem> items;
+	@OneToMany(mappedBy="list", cascade=CascadeType.ALL, fetch=FetchType.EAGER)
+	@Sort(type = SortType.NATURAL)
+	private SortedSet<BackpackListItem> items;
 
 	
 	public BackpackList() {
-		this.items = new HashSet<BackpackListItem>();
+		this.items = new TreeSet<BackpackListItem>();
 	}
 	
 	
-	@Id
 	public Long getlistId() {
 		return listId;
 	}
@@ -44,27 +54,28 @@ public class BackpackList implements Iterable<BackpackListItem> {
 		this.name = name;
 	}
 
-	@OneToMany(mappedBy="list")
-	public Set<BackpackListItem> getItemList() {
+	public SortedSet<BackpackListItem> getItemList() {
 		return items;
 	}
 
-	@Transient
-	public void setItemList(Set<BackpackListItem> items) {
+	public void setItemList(SortedSet<BackpackListItem> items) {
 		this.items = items;
 	}
 
+	
 	public Iterator<BackpackListItem> iterator() {
 		return this.items.iterator();
 	}
 	
-	@Transient
 	public boolean isEmpty() {
 		return this.items.isEmpty();
 	}
 	
+	public void addItem(BackpackListItem item) {
+		this.items.add(item);
+	}
 	
-	@Transient
+	
 	public String getItemsAsString() {
 		StringBuffer result = new StringBuffer();
 		
@@ -78,7 +89,6 @@ public class BackpackList implements Iterable<BackpackListItem> {
 		return result.toString();
 	}
 	
-	@Transient
 	public List<String> getItemsAsStringList() {
 		List<String> result = new ArrayList<String>();
 		

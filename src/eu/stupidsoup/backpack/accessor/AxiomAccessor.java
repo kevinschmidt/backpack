@@ -172,7 +172,7 @@ public class AxiomAccessor implements Accessor {
 			item.setItemId( Long.parseLong( xmlItem.getAttributeValue(new QName("id")) ) );
 			item.setCompleted( Boolean.parseBoolean( xmlItem.getAttributeValue(new QName("completed")) ) );
 			item.setText( xmlItem.getText() );
-			itemList.getItemList().add( item );
+			itemList.addItem( item );
 		}
 		
 		return itemList;

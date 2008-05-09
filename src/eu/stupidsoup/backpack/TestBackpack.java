@@ -21,11 +21,13 @@ public class TestBackpack {
 		Accessor accessor = new AxiomAccessor();
 		accessor.setCredentials("https://soup.backpackit.com/", "8e549ba5fe851d32ac8ab12d143c19ab723b5002");
 
-		BackpackList test = accessor.getListByName("Inbox", "New");
-		System.out.println(test.getItemsAsStringList());
-		
 		Session session = HibernateUtil.getSession();
 		Transaction trans = session.beginTransaction();
+		
+		BackpackList test = accessor.getListByName("Inbox", "New");
+		System.out.println(test.getItemsAsStringList());
+		test.getItemList().first().setList(test);
+		
 		session.save(test);
 		trans.commit();
 		session.close();

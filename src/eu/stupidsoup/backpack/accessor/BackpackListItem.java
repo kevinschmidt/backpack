@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -15,13 +16,17 @@ import javax.persistence.Table;
 @Entity @Table(name="item")
 public class BackpackListItem implements Serializable {
 	private static final long serialVersionUID = 1L;
+	
+	@Id
 	private Long itemId;
 	private Boolean completed;
+	@Lob
 	private String text;
+	@ManyToOne(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
+//	@JoinColumn(nullable=false)
 	private BackpackList list;
 
 	
-	@Id
 	public Long getItemId() {
 		return itemId;
 	}
@@ -29,7 +34,6 @@ public class BackpackListItem implements Serializable {
 	public void setItemId(Long id) {
 		this.itemId = id;
 	}
-	
 	
 	public Boolean getCompleted() {
 		return completed;
@@ -48,15 +52,11 @@ public class BackpackListItem implements Serializable {
 	}
 
 	
-	@ManyToOne(cascade=CascadeType.ALL, fetch=FetchType.LAZY)
-	@JoinColumn(nullable=false)
-	@SuppressWarnings("unused")
-	private BackpackList getList() {
+	public BackpackList getList() {
 		return list;
 	}
 
-	@SuppressWarnings("unused")
-	private void setList(BackpackList list) {
+	public void setList(BackpackList list) {
 		this.list = list;
 	}
 }
