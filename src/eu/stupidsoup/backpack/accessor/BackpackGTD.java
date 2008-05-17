@@ -1,17 +1,16 @@
 package eu.stupidsoup.backpack.accessor;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.persistence.Transient;
+import org.hibernate.annotations.CollectionOfElements;
 
 
 
@@ -21,8 +20,8 @@ public class BackpackGTD {
 	@SuppressWarnings("unused")
 	private Long gtdId;
 	private String pageName;
-	@Transient
-	private List<String> pageTags;
+	@CollectionOfElements
+	private Set<String> pageTags;
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name="next_list_listid")
 	private BackpackList nextList;
@@ -35,7 +34,7 @@ public class BackpackGTD {
 	
 	
 	public BackpackGTD() {
-		pageTags = new ArrayList<String>();
+		pageTags = new HashSet<String>();
 	}
 	
 	
@@ -45,10 +44,10 @@ public class BackpackGTD {
 	public void setPageName(String pageName) {
 		this.pageName = pageName;
 	}
-	public List<String> getPageTags() {
+	public Set<String> getPageTags() {
 		return pageTags;
 	}
-	public void setPageTags(List<String> pageTags) {
+	public void setPageTags(Set<String> pageTags) {
 		this.pageTags = pageTags;
 	}
 	public void addPageTag(String pageTag) {

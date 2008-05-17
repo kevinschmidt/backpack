@@ -16,7 +16,7 @@ import org.springframework.web.servlet.mvc.Controller;
 
 public class BackpackController implements Controller {
 
-		private ListManager listManager;
+		private BackpackManager listManager;
 
 		
 		public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response)
@@ -35,7 +35,7 @@ public class BackpackController implements Controller {
 			return new ModelAndView("main", "model", backpackModel);
 		}
 
-		public void setListManager(ListManager listManager) {
-			this.listManager = listManager;
+		public void setBackpackManager(BackpackManager manager) {
+			this.listManager = manager;
 		}
 }

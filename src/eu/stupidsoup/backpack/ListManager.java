@@ -12,12 +12,17 @@ import eu.stupidsoup.backpack.accessor.Accessor;
 import eu.stupidsoup.backpack.accessor.BackpackGTD;
 import eu.stupidsoup.backpack.accessor.BackpackList;
 
-public class ListManager {
+public class ListManager implements BackpackManager {
 	private Accessor accessor;
 
 	
 	public void setBackpackAccessor(Accessor accessor) {
 		this.accessor = accessor;
+	}
+	
+	
+	public List<String> getListByName(String listName, String pageName) {
+		return this.accessor.getListByName(pageName, listName).getItemsAsStringList();
 	}
 	
 	
@@ -35,7 +40,6 @@ public class ListManager {
 		
 		return result;
 	}
-
 
 	
 	public Map<String, String> getAllListsByNameAsString(String listName) {
@@ -68,9 +72,7 @@ public class ListManager {
 		return result;
 	}
 	
-	public List<String> getListByName(String listName, String pageName) {
-		return this.accessor.getListByName(pageName, listName).getItemsAsStringList();
-	}
+	
 	
 	public Map<String, BackpackGTD> getGTDLists() {
 		SortedMap<String, BackpackGTD> result = new TreeMap<String, BackpackGTD>();
@@ -95,6 +97,10 @@ public class ListManager {
 			}
 		}
 		return result;
+	}
+
+
+	public void refresh() {
 	}
 	
 	
