@@ -2,11 +2,12 @@ package eu.stupidsoup.backpack;
 
 import java.util.List;
 import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import eu.stupidsoup.backpack.accessor.BackpackGTD;
 import eu.stupidsoup.backpack.accessor.BackpackList;
 import eu.stupidsoup.backpack.model.BackpackModel;
-
 
 
 public class PersistenceManager implements BackpackManager {
@@ -49,8 +50,18 @@ public class PersistenceManager implements BackpackManager {
 	
 	
 	public Map<String, BackpackGTD> getGTDLists() {
-		// TODO Auto-generated method stub
-		return null;
+		List<BackpackGTD> gtdList = this.model.getAllBackpackGTD();
+		Map<String, BackpackGTD> result;
+		if (gtdList.isEmpty()) {
+			result = this.directManager.getGTDLists();
+			this.model.putAllBackpackGTD(result.values());
+		} else {
+			result = new TreeMap<String, BackpackGTD>();
+			for(BackpackGTD gtd: gtdList) {
+				result.put(gtd.getPageName(), gtd);
+			}
+		}
+		return result;
 	}
 
 
