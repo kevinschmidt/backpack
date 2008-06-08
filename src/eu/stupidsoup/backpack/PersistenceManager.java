@@ -66,8 +66,18 @@ public class PersistenceManager implements BackpackManager {
 
 
 	public Map<String, BackpackGTD> getGTDListsByTag(String tagName) {
-		// TODO Auto-generated method stub
-		return null;
+		List<BackpackGTD> gtdList = this.model.getBackpackGTDByTag(tagName);
+		Map<String, BackpackGTD> result;
+		if (gtdList.isEmpty()) {
+			result = this.directManager.getGTDListsByTag(tagName);
+			this.model.putAllBackpackGTD(result.values());
+		} else {
+			result = new TreeMap<String, BackpackGTD>();
+			for(BackpackGTD gtd: gtdList) {
+				result.put(gtd.getPageName(), gtd);
+			}
+		}
+		return result;
 	}
 
 

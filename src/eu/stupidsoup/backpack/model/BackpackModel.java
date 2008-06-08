@@ -19,4 +19,9 @@ public class BackpackModel {
 		
 	}
 
+	public List<BackpackGTD> getBackpackGTDByTag(String tagName) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
