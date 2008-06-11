@@ -2,7 +2,6 @@ package eu.stupidsoup.backpack;
 
 import java.util.List;
 import java.util.Map;
-import java.util.SortedMap;
 import java.util.TreeMap;
 
 import eu.stupidsoup.backpack.accessor.BackpackGTD;
@@ -24,27 +23,22 @@ public class PersistenceManager implements BackpackManager {
 	
 	
 	public List<String> getListByName(String listName, String pageName) {
-		// TODO Auto-generated method stub
-		return null;
+		return this.directManager.getListByName(listName, pageName);
 	}
 
 
 	public Map<String, BackpackList> getAllListsByName(String listName) {
-		// TODO Auto-generated method stub
-		return null;
+		return this.directManager.getAllListsByName(listName);
 	}
 
 
 	public Map<String, String> getAllListsByNameAsString(String listName) {
-		// TODO Auto-generated method stub
-		return null;
+		return this.directManager.getAllListsByNameAsString(listName);
 	}
 
 
-	public Map<String, List<String>> getAllListsByNameAsStringList(
-			String listName) {
-		// TODO Auto-generated method stub
-		return null;
+	public Map<String, List<String>> getAllListsByNameAsStringList(String listName) {
+		return this.directManager.getAllListsByNameAsStringList(listName);
 	}
 
 	
@@ -54,7 +48,7 @@ public class PersistenceManager implements BackpackManager {
 		Map<String, BackpackGTD> result;
 		if (gtdList.isEmpty()) {
 			result = this.directManager.getGTDLists();
-			this.model.putAllBackpackGTD(result.values());
+			this.model.saveBackpackGTD(result.values());
 		} else {
 			result = new TreeMap<String, BackpackGTD>();
 			for(BackpackGTD gtd: gtdList) {
@@ -70,7 +64,7 @@ public class PersistenceManager implements BackpackManager {
 		Map<String, BackpackGTD> result;
 		if (gtdList.isEmpty()) {
 			result = this.directManager.getGTDListsByTag(tagName);
-			this.model.putAllBackpackGTD(result.values());
+			this.model.saveBackpackGTD(result.values());
 		} else {
 			result = new TreeMap<String, BackpackGTD>();
 			for(BackpackGTD gtd: gtdList) {
@@ -84,7 +78,6 @@ public class PersistenceManager implements BackpackManager {
 
 	public void refresh() {
 		// TODO Auto-generated method stub
-		
 	}
 
 }

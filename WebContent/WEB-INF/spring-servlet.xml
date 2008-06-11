@@ -3,7 +3,12 @@
 
 <beans>
 	<bean id="backpackController" class="eu.stupidsoup.backpack.BackpackController">
-		<property name="listManager"><ref bean="listMan" /></property>
+		<property name="backpackManager"><ref bean="persistMan" /></property>
+	</bean>
+	
+	<bean id="persistMan" class="eu.stupidsoup.backpack.PersistenceManager">
+        <property name="backpackManager"><ref bean="listMan" /></property>
+        <property name="backpackModel"><ref bean="backpackModel" /></property>
 	</bean>
 	
 	<bean id="listMan" class="eu.stupidsoup.backpack.ListManager">
@@ -13,6 +18,9 @@
 	<bean id="backpackAccessor" class="eu.stupidsoup.backpack.accessor.AxiomAccessor">
         <property name="url" value="https://soup.backpackit.com/" />
         <property name="apiKey" value="8e549ba5fe851d32ac8ab12d143c19ab723b5002" />
+    </bean>
+    
+    <bean id="backpackModel" class="eu.stupidsoup.backpack.model.BackpackModel">
     </bean>
 	
 	
