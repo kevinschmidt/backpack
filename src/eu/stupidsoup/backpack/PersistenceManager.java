@@ -2,6 +2,7 @@ package eu.stupidsoup.backpack;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 import eu.stupidsoup.backpack.accessor.BackpackGTD;
@@ -43,6 +44,11 @@ public class PersistenceManager implements BackpackManager {
 
 	
 	
+	public BackpackGTD getGTDbyPage(String pageName) {
+		return null;
+	}
+	
+	
 	public Map<String, BackpackGTD> getGTDLists() {
 		List<BackpackGTD> gtdList = this.model.getAllBackpackGTD();
 		Map<String, BackpackGTD> result;
@@ -77,7 +83,16 @@ public class PersistenceManager implements BackpackManager {
 
 
 	public void refresh() {
-		// TODO Auto-generated method stub
+		this.refreshGTD();
+	}
+	
+	public void refreshGTD() {
+		Set<String> pageList = this.model.getPageList();
+		for (String pageName: pageList) {
+			System.out.println("Refreshing page " + pageName);
+			BackpackGTD gtd = this.directManager.getGTDbyPage(pageName);
+			this.model.saveBackpackGTD(gtd);
+		}
 	}
 
 }

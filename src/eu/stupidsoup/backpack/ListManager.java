@@ -72,6 +72,11 @@ public class ListManager implements BackpackManager {
 	
 	
 	
+	public BackpackGTD getGTDbyPage(String pageName) {
+		return accessor.getGTDByName(pageName);
+	}
+	
+	
 	public Map<String, BackpackGTD> getGTDLists() {
 		SortedMap<String, BackpackGTD> result = new TreeMap<String, BackpackGTD>();
 		Set<String> pageList = accessor.getPageNames();
@@ -100,6 +105,5 @@ public class ListManager implements BackpackManager {
 
 	public void refresh() {
 	}
-	
 	
 }

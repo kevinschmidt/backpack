@@ -5,6 +5,9 @@
 	<bean id="backpackController" class="eu.stupidsoup.backpack.BackpackController">
 		<property name="backpackManager"><ref bean="persistMan" /></property>
 	</bean>
+	<bean id="refreshController" class="eu.stupidsoup.backpack.RefreshController">
+		<property name="backpackManager"><ref bean="persistMan" /></property>
+	</bean>
 	
 	<bean id="persistMan" class="eu.stupidsoup.backpack.PersistenceManager">
         <property name="backpackManager"><ref bean="listMan" /></property>
@@ -28,6 +31,7 @@
 		<property name="mappings">
 			<props>
 				<prop key="/index.html">backpackController</prop>
+				<prop key="/refresh.html">refreshController</prop>
 			</props>
 		</property>
 	</bean>

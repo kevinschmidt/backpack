@@ -37,7 +37,12 @@ public class BackpackGTD {
 		pageTags = new HashSet<String>();
 	}
 	
-	
+	public Long getGtdId() {
+		return gtdId;
+	}
+	public void setGtdId(Long gtdId) {
+		this.gtdId = gtdId;
+	}
 	public String getPageName() {
 		return pageName;
 	}

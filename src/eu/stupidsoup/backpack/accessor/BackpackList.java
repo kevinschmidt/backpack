@@ -11,6 +11,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 
@@ -23,6 +24,7 @@ public class BackpackList implements Iterable<BackpackListItem>, Serializable {
 	private Long listId;
 	private String name;
 	@OneToMany(mappedBy="list", cascade=CascadeType.ALL, fetch=FetchType.EAGER)
+	@OrderBy("text")
 	private Set<BackpackListItem> items;
 
 	

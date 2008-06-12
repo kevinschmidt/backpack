@@ -8,6 +8,7 @@ import eu.stupidsoup.backpack.accessor.BackpackList;
 
 public interface BackpackManager {
 	
+	public BackpackGTD getGTDbyPage(String pageName);
 	public Map<String, BackpackGTD> getGTDLists();
 	public Map<String, BackpackGTD> getGTDListsByTag(String tagName);
 	
