@@ -66,6 +66,8 @@ public class BackpackModel {
 		if ( sessionGTD == null ) {
 			session.save(gtd);
 		} else {
+			sessionGTD.clearLists();
+			session.flush();
 			gtd.setGtdId(sessionGTD.getGtdId());
 			session.merge(gtd);
 		}
@@ -75,14 +77,14 @@ public class BackpackModel {
 	}
 
 
-	public Set<String> getPageList() {
+	public Set<String> getGTDPageList() {
 		Session session = HibernateUtil.getSession();
 		Transaction trans = session.beginTransaction();
 		
 		List results = session.createCriteria(BackpackGTD.class)
-    	.setProjection( Property.forName("pageName").group() )
-    	.addOrder( Order.asc("pageName") )
-    	.list();
+    		.setProjection( Property.forName("pageName").group() )
+    		//.addOrder( Order.asc("pageName") )
+    		.list();
 		
 		trans.commit();
 		session.close();

@@ -65,6 +65,9 @@ public class BackpackList implements Iterable<BackpackListItem>, Serializable {
 	public boolean isEmpty() {
 		return this.items.isEmpty();
 	}
+	public void makeEmpty() {
+		this.items.clear();
+	}
 	
 	public void addItem(BackpackListItem item) {
 		this.items.add(item);

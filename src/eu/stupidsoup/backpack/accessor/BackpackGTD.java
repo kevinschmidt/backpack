@@ -82,6 +82,7 @@ public class BackpackGTD {
 	}
 	
 	
+	
 	public boolean isEmpty() {
 		if (nextList == null && waitingList == null && laterList == null) {
 			return true;
@@ -94,6 +95,18 @@ public class BackpackGTD {
 			return true;
 		}
 		return false;
+	}
+	
+	public void makeEmpty() {
+		this.nextList = null;
+		this.waitingList = null;
+		this.laterList = null;
+	}
+	
+	public void clearLists() {
+		this.nextList.makeEmpty();
+		this.waitingList.makeEmpty();
+		this.laterList.makeEmpty();
 	}
 	
 	public String toString() {
