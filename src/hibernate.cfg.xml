@@ -22,10 +22,10 @@
 		<property name="use_sql_comments">true</property>
 		<property name="generate_statistics">true</property>
 		
-		<mapping package="eu.stupidsoup.backpack.accessor" />
-		<mapping class="eu.stupidsoup.backpack.accessor.BackpackListItem" />
-		<mapping class="eu.stupidsoup.backpack.accessor.BackpackList" />
-		<mapping class="eu.stupidsoup.backpack.accessor.BackpackGTD" />
+		<mapping package="eu.stupidsoup.backpack.model" />
+		<mapping class="eu.stupidsoup.backpack.model.BackpackListItem" />
+		<mapping class="eu.stupidsoup.backpack.model.BackpackList" />
+		<mapping class="eu.stupidsoup.backpack.model.BackpackGTD" />
     </session-factory>
 
 </hibernate-configuration>

@@ -3,8 +3,8 @@ package eu.stupidsoup.backpack;
 import java.util.List;
 import java.util.Map;
 
-import eu.stupidsoup.backpack.accessor.BackpackGTD;
-import eu.stupidsoup.backpack.accessor.BackpackList;
+import eu.stupidsoup.backpack.model.BackpackGTD;
+import eu.stupidsoup.backpack.model.BackpackList;
 
 public interface BackpackManager {
 	

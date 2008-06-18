@@ -5,8 +5,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
-import eu.stupidsoup.backpack.accessor.BackpackGTD;
-import eu.stupidsoup.backpack.accessor.BackpackList;
+import eu.stupidsoup.backpack.model.BackpackGTD;
+import eu.stupidsoup.backpack.model.BackpackList;
 import eu.stupidsoup.backpack.model.BackpackModel;
 
 

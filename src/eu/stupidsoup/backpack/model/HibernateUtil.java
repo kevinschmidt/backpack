@@ -1,4 +1,4 @@
-package eu.stupidsoup.backpack.accessor;
+package eu.stupidsoup.backpack.model;
 
 import org.hibernate.*;
 import org.hibernate.cfg.*;

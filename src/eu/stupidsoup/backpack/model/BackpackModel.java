@@ -11,8 +11,6 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Property;
 import org.hibernate.criterion.Restrictions;
 
-import eu.stupidsoup.backpack.accessor.BackpackGTD;
-import eu.stupidsoup.backpack.accessor.HibernateUtil;
 
 
 public class BackpackModel {

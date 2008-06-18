@@ -1,4 +1,4 @@
-package eu.stupidsoup.backpack.accessor;
+package eu.stupidsoup.backpack.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;

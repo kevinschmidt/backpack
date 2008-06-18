@@ -7,8 +7,8 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 import eu.stupidsoup.backpack.accessor.Accessor;
-import eu.stupidsoup.backpack.accessor.BackpackGTD;
-import eu.stupidsoup.backpack.accessor.BackpackList;
+import eu.stupidsoup.backpack.model.BackpackGTD;
+import eu.stupidsoup.backpack.model.BackpackList;
 
 public class ListManager implements BackpackManager {
 	private Accessor accessor;

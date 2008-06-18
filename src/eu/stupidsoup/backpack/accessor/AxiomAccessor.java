@@ -21,6 +21,11 @@ import org.apache.axis2.addressing.EndpointReference;
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
 
+import eu.stupidsoup.backpack.model.BackpackGTD;
+import eu.stupidsoup.backpack.model.BackpackList;
+import eu.stupidsoup.backpack.model.BackpackListItem;
+
+
 public class AxiomAccessor implements Accessor {
 	String url;
 	String apiKey;

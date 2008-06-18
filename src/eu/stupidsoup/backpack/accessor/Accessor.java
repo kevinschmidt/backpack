@@ -3,6 +3,9 @@ package eu.stupidsoup.backpack.accessor;
 import java.util.Map;
 import java.util.SortedSet;
 
+import eu.stupidsoup.backpack.model.BackpackGTD;
+import eu.stupidsoup.backpack.model.BackpackList;
+
 
 
 public interface Accessor {

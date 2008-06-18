@@ -9,8 +9,8 @@ import org.hibernate.criterion.Property;
 
 import eu.stupidsoup.backpack.accessor.Accessor;
 import eu.stupidsoup.backpack.accessor.AxiomAccessor;
-import eu.stupidsoup.backpack.accessor.BackpackGTD;
-import eu.stupidsoup.backpack.accessor.HibernateUtil;
+import eu.stupidsoup.backpack.model.BackpackGTD;
+import eu.stupidsoup.backpack.model.HibernateUtil;
 
 
 
