@@ -2,19 +2,19 @@
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
 
 <beans>
-	<bean id="backpackController" class="eu.stupidsoup.backpack.BackpackController">
+	<bean id="backpackController" class="eu.stupidsoup.backpack.server.BackpackController">
 		<property name="backpackManager"><ref bean="persistMan" /></property>
 	</bean>
-	<bean id="refreshController" class="eu.stupidsoup.backpack.RefreshController">
+	<bean id="refreshController" class="eu.stupidsoup.backpack.server.RefreshController">
 		<property name="backpackManager"><ref bean="persistMan" /></property>
 	</bean>
 	
-	<bean id="persistMan" class="eu.stupidsoup.backpack.PersistenceManager">
+	<bean id="persistMan" class="eu.stupidsoup.backpack.server.PersistenceManager">
         <property name="backpackManager"><ref bean="listMan" /></property>
         <property name="backpackModel"><ref bean="backpackModel" /></property>
 	</bean>
 	
-	<bean id="listMan" class="eu.stupidsoup.backpack.ListManager">
+	<bean id="listMan" class="eu.stupidsoup.backpack.server.ListManager">
         <property name="backpackAccessor"><ref bean="backpackAccessor" /></property>
 	</bean>
 	

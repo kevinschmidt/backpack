@@ -1,4 +1,4 @@
-package eu.stupidsoup.backpack;
+package eu.stupidsoup.backpack.server;
 
 import java.io.IOException;
 import java.util.HashMap;
