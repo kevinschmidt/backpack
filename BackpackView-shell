@@ -1,0 +1,3 @@
+#!/bin/sh
+APPDIR=`dirname $0`;
+java -XstartOnFirstThread -Xmx256M -cp "$APPDIR/src:$APPDIR/build:/opt/gwt-mac-1.5.0/gwt-user.jar:/opt/gwt-mac-1.5.0/gwt-dev-mac.jar" com.google.gwt.dev.GWTShell -noserver -port 8080 -out "$APPDIR/WebContent" "$@" http://localhost:8080/backpack/eu.stupidsoup.backpack.BackpackView/BackpackView.html;

@@ -1,41 +1,22 @@
-package eu.stupidsoup.backpack.model;
+package eu.stupidsoup.backpack.client.model;
 
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import org.hibernate.annotations.CollectionOfElements;
 
-
-
-@Entity @Table(name="gtd")
-public class BackpackGTD implements Serializable {
+public class BackpackClientGTD implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
-	@Id @GeneratedValue
 	private Long gtdId;
 	private String pageName;
-	@CollectionOfElements
 	private Set<String> pageTags;
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name="next_list_listid")
-	private BackpackList nextList;
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name="waiting_list_listid")
-	private BackpackList waitingList;
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name="later_list_listid")
-	private BackpackList laterList;
+	private BackpackClientList nextList;
+	private BackpackClientList waitingList;
+	private BackpackClientList laterList;
 	
 	
-	public BackpackGTD() {
+	public BackpackClientGTD() {
 		pageTags = new HashSet<String>();
 	}
 	
@@ -64,22 +45,22 @@ public class BackpackGTD implements Serializable {
 		return this.pageTags.contains(pageTag);
 	}
 	
-	public BackpackList getNextList() {
+	public BackpackClientList getNextList() {
 		return nextList;
 	}
-	public void setNextList(BackpackList nextList) {
+	public void setNextList(BackpackClientList nextList) {
 		this.nextList = nextList;
 	}
-	public BackpackList getWaitingList() {
+	public BackpackClientList getWaitingList() {
 		return waitingList;
 	}
-	public void setWaitingList(BackpackList waitingList) {
+	public void setWaitingList(BackpackClientList waitingList) {
 		this.waitingList = waitingList;
 	}
-	public BackpackList getLaterList() {
+	public BackpackClientList getLaterList() {
 		return laterList;
 	}
-	public void setLaterList(BackpackList laterList) {
+	public void setLaterList(BackpackClientList laterList) {
 		this.laterList = laterList;
 	}
 	
