@@ -7,16 +7,11 @@ import java.util.Map;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
-import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Hyperlink;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
-import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
 import eu.stupidsoup.backpack.client.model.BackpackClientGTD;
 
@@ -24,7 +19,7 @@ import eu.stupidsoup.backpack.client.model.BackpackClientGTD;
 public class BackpackView implements EntryPoint, ClickListener {
 	private BackpackViewServiceAsync backpackAsync;
 	private FlexTable mainTable = new FlexTable();
-	private Map<String,Boolean> expandedList = new HashMap<String,Boolean>();
+	private Map<String,Integer> expandedList = new HashMap<String,Integer>();
 	
 
 	public void onModuleLoad() {
@@ -41,7 +36,7 @@ public class BackpackView implements EntryPoint, ClickListener {
 		
 		Hyperlink link0 = new Hyperlink("Private", "private");
 		link0.addClickListener(this);
-		Hyperlink link1 = new Hyperlink("Half-Private", "half-private");
+		Hyperlink link1 = new Hyperlink("Half-Private", "halfprivate");
 		link1.addClickListener(this);
 		Hyperlink link2 = new Hyperlink("Work", "work");
 		link2.addClickListener(this);
@@ -50,9 +45,9 @@ public class BackpackView implements EntryPoint, ClickListener {
 		mainTable.setWidget(2, 0, link1);
 		mainTable.setWidget(3, 0, link2);
 		
-		expandedList.put("private", false);
-		expandedList.put("half-private", false);
-		expandedList.put("work", false);
+		expandedList.put("private", 0);
+		expandedList.put("halfprivate", 0);
+		expandedList.put("work", 0);
 	}
 
 	
@@ -61,7 +56,7 @@ public class BackpackView implements EntryPoint, ClickListener {
 			final String category = ((Hyperlink) sender ).getTargetHistoryToken();
 
 			if ( this.expandedList.containsKey(category) ) { 
-				if ( this.expandedList.get(category) == false ) {
+				if ( this.expandedList.get(category) == 0 ) {
 					final Integer newRowNumber = this.createTableForCategory(category);
 					
 					AsyncCallback<List<BackpackClientGTD>> callback = new AsyncCallback<List<BackpackClientGTD>>() {
@@ -70,7 +65,7 @@ public class BackpackView implements EntryPoint, ClickListener {
 						}
 						
 						public void onSuccess(List<BackpackClientGTD> result) {
-							updateTableForRow(category, newRowNumber, result.get(0));
+							updateTableForRow(category, newRowNumber, result);
 						}
 					};
 					backpackAsync.getGTDListsByTag(category, callback);
@@ -83,18 +78,27 @@ public class BackpackView implements EntryPoint, ClickListener {
 	
 
 	
-	private void updateTableForRow(String category, int newRow, BackpackClientGTD item) {
-		if ( !this.expandedList.containsKey(category) || this.expandedList.get(category) != true );
-		
-		mainTable.setText(newRow, 0, item.getPageName());
-		mainTable.setText(newRow, 1, item.getNextList().getItemsAsString());
-		mainTable.setText(newRow, 2, item.getWaitingList().getItemsAsString());
-		mainTable.setText(newRow, 3, item.getLaterList().getItemsAsString());
+	private void updateTableForRow(String category, int newRow, List<BackpackClientGTD> items) {
+		if ( !this.expandedList.containsKey(category) || this.expandedList.get(category) == 0 ) return;
+		System.out.println("entering update");
+		int counter = 0;
+		for (BackpackClientGTD gtd: items) {
+			if (counter > 0) {
+				mainTable.insertRow(newRow+counter);
+			}
+			mainTable.setText(newRow + counter, 0, gtd.getPageName());
+			mainTable.setText(newRow + counter, 1, gtd.getNextList().getItemsAsString());
+			mainTable.setText(newRow + counter, 2, gtd.getWaitingList().getItemsAsString());
+			mainTable.setText(newRow + counter, 3, gtd.getLaterList().getItemsAsString());
+			counter++;
+		}
+		System.out.println("category to "+items.size());
+		this.expandedList.put(category, items.size());
 	}
 
 
 	private Integer createTableForCategory(String category) {
-		if ( !this.expandedList.containsKey(category) || this.expandedList.get(category) != false ) return null;
+		if ( !this.expandedList.containsKey(category) || this.expandedList.get(category) != 0 ) return null;
 
 		Integer categoryRow = this.findRowWithCategory(category);
 		if (categoryRow == null) return null;
@@ -102,18 +106,21 @@ public class BackpackView implements EntryPoint, ClickListener {
 		int newRow = mainTable.insertRow(categoryRow+1);
 		mainTable.setText(newRow, 0, "Loading ...");
 				
-		this.expandedList.put(category, true);
+		this.expandedList.put(category, 1);
 		return newRow;
 	}
 	
 	private void destroyTableForCategory(String category) {
-		if ( !this.expandedList.containsKey(category) || this.expandedList.get(category) != true ) return;
+		if ( !this.expandedList.containsKey(category) || this.expandedList.get(category) == 0 ) return;
 		
 		Integer categoryRow = this.findRowWithCategory(category);
 		if (categoryRow == null) return;
 		
-		mainTable.removeRow(categoryRow+1);
-		this.expandedList.put(category, false);
+		System.out.println(this.expandedList.get(category));
+		for (int i=0; i < this.expandedList.get(category); i++) {
+			mainTable.removeRow(categoryRow+1);
+		}
+		this.expandedList.put(category, 0);
 	}
 	
 	private Integer findRowWithCategory(String category) {

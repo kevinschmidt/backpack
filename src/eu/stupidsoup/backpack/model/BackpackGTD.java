@@ -6,6 +6,7 @@ import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
@@ -22,16 +23,16 @@ public class BackpackGTD implements Serializable {
 	@Id @GeneratedValue
 	private Long gtdId;
 	private String pageName;
-	@CollectionOfElements
+	@CollectionOfElements(fetch = FetchType.EAGER)
 	private Set<String> pageTags;
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name="next_list_listid")
+	@JoinColumn(name = "next_list_listid")
 	private BackpackList nextList;
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name="waiting_list_listid")
+	@JoinColumn(name = "waiting_list_listid")
 	private BackpackList waitingList;
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name="later_list_listid")
+	@JoinColumn(name = "later_list_listid")
 	private BackpackList laterList;
 	
 	

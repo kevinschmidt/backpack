@@ -16,10 +16,10 @@
         <property name="url" value="https://soup.backpackit.com/" />
         <property name="apiKey" value="8e549ba5fe851d32ac8ab12d143c19ab723b5002" />
     </bean>
-    <bean id="backpackViewService" class="eu.stupidsoup.backpack.server.BackpackViewServiceImpl">
-		<property name="backpackManager"><ref bean="listMan" /></property>
-	</bean>
     
+    <bean id="backpackViewService" class="eu.stupidsoup.backpack.server.BackpackViewServiceImpl">
+		<property name="backpackManager"><ref bean="persistMan" /></property>
+	</bean>
 	<bean id="backpackController" class="eu.stupidsoup.backpack.server.BackpackController">
 		<property name="backpackManager"><ref bean="persistMan" /></property>
 	</bean>
