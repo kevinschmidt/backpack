@@ -19,7 +19,7 @@ import eu.stupidsoup.backpack.client.model.BackpackClientGTD;
 public class BackpackView implements EntryPoint, ClickListener {
 	private BackpackViewServiceAsync backpackAsync;
 	private FlexTable mainTable = new FlexTable();
-	private Map<String,Integer> expandedList = new HashMap<String,Integer>();
+	private Map<String,Boolean> expandedList = new HashMap<String,Boolean>();
 	
 
 	public void onModuleLoad() {
@@ -45,9 +45,9 @@ public class BackpackView implements EntryPoint, ClickListener {
 		mainTable.setWidget(2, 0, link1);
 		mainTable.setWidget(3, 0, link2);
 		
-		expandedList.put("private", 0);
-		expandedList.put("halfprivate", 0);
-		expandedList.put("work", 0);
+		expandedList.put("private", false);
+		expandedList.put("halfprivate", false);
+		expandedList.put("work", false);
 	}
 
 	
@@ -56,8 +56,8 @@ public class BackpackView implements EntryPoint, ClickListener {
 			final String category = ((Hyperlink) sender ).getTargetHistoryToken();
 
 			if ( this.expandedList.containsKey(category) ) { 
-				if ( this.expandedList.get(category) == 0 ) {
-					final Integer newRowNumber = this.createTableForCategory(category);
+				if ( !this.expandedList.get(category) ) {
+					this.setLoadingForCategory(category);
 					
 					AsyncCallback<List<BackpackClientGTD>> callback = new AsyncCallback<List<BackpackClientGTD>>() {
 						public void onFailure(Throwable caught) {
@@ -65,12 +65,12 @@ public class BackpackView implements EntryPoint, ClickListener {
 						}
 						
 						public void onSuccess(List<BackpackClientGTD> result) {
-							updateTableForRow(category, newRowNumber, result);
+							updateSubTableForCategory(category, result);
 						}
 					};
 					backpackAsync.getGTDListsByTag(category, callback);
 				} else {
-					this.destroyTableForCategory(category);
+					this.deleteRowsAfterCategory(category);
 				}
 			}
 		}
@@ -78,49 +78,76 @@ public class BackpackView implements EntryPoint, ClickListener {
 	
 
 	
-	private void updateTableForRow(String category, int newRow, List<BackpackClientGTD> items) {
-		if ( !this.expandedList.containsKey(category) || this.expandedList.get(category) == 0 ) return;
-		System.out.println("entering update");
+	private void updateSubTableForCategory(String category, List<BackpackClientGTD> items) {
+		if ( !this.expandedList.containsKey(category) ) return;
+		
+		int newRow = this.createRowsAfterCategory(category, items.size());
 		int counter = 0;
 		for (BackpackClientGTD gtd: items) {
-			if (counter > 0) {
-				mainTable.insertRow(newRow+counter);
-			}
 			mainTable.setText(newRow + counter, 0, gtd.getPageName());
-			mainTable.setText(newRow + counter, 1, gtd.getNextList().getItemsAsString());
-			mainTable.setText(newRow + counter, 2, gtd.getWaitingList().getItemsAsString());
-			mainTable.setText(newRow + counter, 3, gtd.getLaterList().getItemsAsString());
+			if (gtd.getNextList() != null) {
+				mainTable.setText(newRow + counter, 1, gtd.getNextList().getItemsAsString());
+			}
+			if (gtd.getWaitingList() != null) {
+				mainTable.setText(newRow + counter, 2, gtd.getWaitingList().getItemsAsString());
+			}
+			if (gtd.getLaterList() != null) {
+				mainTable.setText(newRow + counter, 3, gtd.getLaterList().getItemsAsString());
+			}
 			counter++;
 		}
-		System.out.println("category to "+items.size());
-		this.expandedList.put(category, items.size());
 	}
 
 
-	private Integer createTableForCategory(String category) {
-		if ( !this.expandedList.containsKey(category) || this.expandedList.get(category) != 0 ) return null;
-
-		Integer categoryRow = this.findRowWithCategory(category);
-		if (categoryRow == null) return null;
+	private void setLoadingForCategory(String category) {
+		if ( !this.expandedList.containsKey(category) );
 		
-		int newRow = mainTable.insertRow(categoryRow+1);
+		int newRow = this.createRowsAfterCategory(category, 1);
 		mainTable.setText(newRow, 0, "Loading ...");
-				
-		this.expandedList.put(category, 1);
-		return newRow;
 	}
 	
-	private void destroyTableForCategory(String category) {
-		if ( !this.expandedList.containsKey(category) || this.expandedList.get(category) == 0 ) return;
-		
+	
+	private Integer createRowsAfterCategory(String category, int rowAmount) {
 		Integer categoryRow = this.findRowWithCategory(category);
-		if (categoryRow == null) return;
-		
-		System.out.println(this.expandedList.get(category));
-		for (int i=0; i < this.expandedList.get(category); i++) {
-			mainTable.removeRow(categoryRow+1);
+		Integer nextCategoryRow = this.findNextCategory(category);
+		if (nextCategoryRow == null ) {
+			nextCategoryRow  = mainTable.getRowCount();
 		}
-		this.expandedList.put(category, 0);
+			
+		for (int i=nextCategoryRow-categoryRow-1; i < rowAmount; i++) {
+			mainTable.insertRow(nextCategoryRow);
+		}
+		this.expandedList.put(category, true);
+		return categoryRow+1;
+	}
+	
+	private void deleteRowsAfterCategory(String category) {
+		Integer categoryRow = this.findRowWithCategory(category);
+		Integer nextCategoryRow = this.findNextCategory(category);
+		if (nextCategoryRow == null ) {
+			nextCategoryRow  = mainTable.getRowCount();
+		}
+		
+		for (int i=nextCategoryRow-1; i > categoryRow; i--) {
+			mainTable.removeRow(i);
+		}
+		this.expandedList.put(category, false);
+	}
+	
+	private Integer findNextCategory(String category) {
+		int categoryRow = this.findRowWithCategory(category);
+		for (int i = categoryRow+1; i < mainTable.getRowCount(); i++) {
+			Widget widget = mainTable.getWidget(i, 0);
+			if ( widget != null ) {
+				if ( widget.getClass() == Hyperlink.class ) {
+					Hyperlink tempLink = (Hyperlink) widget;
+					if ( this.expandedList.containsKey( tempLink.getTargetHistoryToken() ) ) {
+						return i;
+					}
+				}
+			}
+		}
+		return null;
 	}
 	
 	private Integer findRowWithCategory(String category) {
@@ -132,10 +159,6 @@ public class BackpackView implements EntryPoint, ClickListener {
 					if ( tempLink.getTargetHistoryToken().equals(category) ) {
 						return i;
 					}
-				}
-			} else {
-				if ( mainTable.getText(i, 0).equals(category) ) {
-					return i;
 				}
 			}
 		}
