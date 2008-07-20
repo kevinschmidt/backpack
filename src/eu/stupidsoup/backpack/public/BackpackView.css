@@ -31,3 +31,11 @@ button {
 img {
   margin-top: 20px;
 }
+
+tr:odd {
+  background-color: rgb( 149, 206, 145 );
+}
+
+tr:even {
+  background-color: rgb( 189, 246, 185 );
+}

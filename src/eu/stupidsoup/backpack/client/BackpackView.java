@@ -53,21 +53,13 @@ public class BackpackView implements EntryPoint, ClickListener {
 	
 	public void onClick(Widget sender) {
 		if (sender.getClass() == Hyperlink.class ) {	
-			final String category = ((Hyperlink) sender ).getTargetHistoryToken();
+			String category = ((Hyperlink) sender ).getTargetHistoryToken();
 
 			if ( this.expandedList.containsKey(category) ) { 
 				if ( !this.expandedList.get(category) ) {
 					this.setLoadingForCategory(category);
 					
-					AsyncCallback<List<BackpackClientGTD>> callback = new AsyncCallback<List<BackpackClientGTD>>() {
-						public void onFailure(Throwable caught) {
-							System.out.println(caught.getMessage());
-						}
-						
-						public void onSuccess(List<BackpackClientGTD> result) {
-							updateSubTableForCategory(category, result);
-						}
-					};
+					BackpackGTDCallback callback = new BackpackGTDCallback(category); 
 					backpackAsync.getGTDListsByTag(category, callback);
 				} else {
 					this.deleteRowsAfterCategory(category);
@@ -165,4 +157,23 @@ public class BackpackView implements EntryPoint, ClickListener {
 		return null;
 	}
 	
+	
+	
+	private class BackpackGTDCallback implements AsyncCallback<List<BackpackClientGTD>> {
+		private String category;
+
+		public BackpackGTDCallback(String category) {
+			this.category = category;
+		}
+		
+		public void onFailure(Throwable caught) {
+			System.out.println(caught.getMessage());
+		}
+		
+		public void onSuccess(List<BackpackClientGTD> result) {
+			updateSubTableForCategory(category, result);
+		}
+
+	}
+
 }
