@@ -9,11 +9,16 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Hyperlink;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
 import eu.stupidsoup.backpack.client.model.BackpackClientGTD;
+import eu.stupidsoup.backpack.client.model.BackpackClientList;
+import eu.stupidsoup.backpack.client.model.BackpackClientListItem;
 
 
 public class BackpackView implements EntryPoint, ClickListener {
@@ -58,7 +63,6 @@ public class BackpackView implements EntryPoint, ClickListener {
 			if ( this.expandedList.containsKey(category) ) { 
 				if ( !this.expandedList.get(category) ) {
 					this.setLoadingForCategory(category);
-					
 					BackpackGTDCallback callback = new BackpackGTDCallback(category); 
 					backpackAsync.getGTDListsByTag(category, callback);
 				} else {
@@ -78,19 +82,28 @@ public class BackpackView implements EntryPoint, ClickListener {
 		for (BackpackClientGTD gtd: items) {
 			mainTable.setText(newRow + counter, 0, gtd.getPageName());
 			if (gtd.getNextList() != null) {
-				mainTable.setText(newRow + counter, 1, gtd.getNextList().getItemsAsString());
+				mainTable.setWidget(newRow + counter, 1, this.createItemsPanel( gtd.getNextList() ));
 			}
 			if (gtd.getWaitingList() != null) {
-				mainTable.setText(newRow + counter, 2, gtd.getWaitingList().getItemsAsString());
+				mainTable.setWidget(newRow + counter, 2, this.createItemsPanel( gtd.getWaitingList() ));
 			}
 			if (gtd.getLaterList() != null) {
-				mainTable.setText(newRow + counter, 3, gtd.getLaterList().getItemsAsString());
+				mainTable.setWidget(newRow + counter, 3, this.createItemsPanel( gtd.getLaterList() ));
 			}
 			counter++;
 		}
 	}
 
 
+	private Widget createItemsPanel(BackpackClientList list) {
+		VerticalPanel panel = new VerticalPanel();
+		for (BackpackClientListItem item: list) {
+			panel.add( new Label(item.getText()) );
+		}
+		return panel;
+	}
+	
+	
 	private void setLoadingForCategory(String category) {
 		if ( !this.expandedList.containsKey(category) );
 		

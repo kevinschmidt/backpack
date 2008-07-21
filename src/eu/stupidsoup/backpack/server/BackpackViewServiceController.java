@@ -6,14 +6,12 @@ import java.util.List;
 import net.sf.dozer.util.mapping.DozerBeanMapper;
 import net.sf.dozer.util.mapping.MapperIF;
 
-import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-
 import eu.stupidsoup.backpack.client.BackpackViewService;
 import eu.stupidsoup.backpack.client.model.BackpackClientGTD;
 import eu.stupidsoup.backpack.model.BackpackGTD;
 
 
-public class BackpackViewServiceImpl implements BackpackViewService {
+public class BackpackViewServiceController implements BackpackViewService {
 	private static final long serialVersionUID = 1L;
 	private BackpackManager listManager;
 	
