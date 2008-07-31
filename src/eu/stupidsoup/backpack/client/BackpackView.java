@@ -9,9 +9,8 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlexTable;
-import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Hyperlink;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -32,12 +31,19 @@ public class BackpackView implements EntryPoint, ClickListener {
 	    RootPanel.get().add(mainTable);
 
 		mainTable.setWidth("100%");
-		mainTable.setBorderWidth(1);
+		//mainTable.setBorderWidth(1);
 		mainTable.getColumnFormatter().setWidth(0, "10%");
+		mainTable.getColumnFormatter().setWidth(1, "30%");
+		mainTable.getColumnFormatter().setWidth(2, "30%");
+		mainTable.getColumnFormatter().setWidth(3, "30%");
+		
 		mainTable.setText(0, 0, "Category");
 		mainTable.setText(0, 1, "Next List");
 		mainTable.setText(0, 2, "Waiting List");
 		mainTable.setText(0, 3, "Later List");
+		
+		mainTable.getRowFormatter().setStyleName(0, "gwt-row-header");
+		this.clearTable(1, 0, 3, 4, "gwt-row-main");
 		
 		Hyperlink link0 = new Hyperlink("Private", "private");
 		link0.addClickListener(this);
@@ -81,6 +87,11 @@ public class BackpackView implements EntryPoint, ClickListener {
 		int counter = 0;
 		for (BackpackClientGTD gtd: items) {
 			mainTable.setText(newRow + counter, 0, gtd.getPageName());
+			if (counter % 2 == 0) {
+				mainTable.getRowFormatter().setStyleName(newRow + counter, "gwt-row-odd");
+			} else {
+				mainTable.getRowFormatter().setStyleName(newRow + counter, "gwt-row-even");
+			}
 			if (gtd.getNextList() != null) {
 				mainTable.setWidget(newRow + counter, 1, this.createItemsPanel( gtd.getNextList() ));
 			}
@@ -98,7 +109,7 @@ public class BackpackView implements EntryPoint, ClickListener {
 	private Widget createItemsPanel(BackpackClientList list) {
 		VerticalPanel panel = new VerticalPanel();
 		for (BackpackClientListItem item: list) {
-			panel.add( new Label(item.getText()) );
+			panel.add( new HTML("<li>"+item.getText()+"</li>") );
 		}
 		return panel;
 	}
@@ -168,6 +179,15 @@ public class BackpackView implements EntryPoint, ClickListener {
 			}
 		}
 		return null;
+	}
+	
+	private void clearTable(int rowStart, int columnStart, int rowAmount, int columnAmount, String styleName) {
+		for (int i=rowStart; i < rowStart+rowAmount; i++) {
+			mainTable.getRowFormatter().setStyleName(i, styleName);
+			for (int j=columnStart; j < columnStart+columnAmount; j++) {
+				mainTable.setText(i, j, "");
+			}
+		}
 	}
 	
 	

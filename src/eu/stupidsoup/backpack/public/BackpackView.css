@@ -32,10 +32,23 @@ img {
   margin-top: 20px;
 }
 
-tr:odd {
+
+.gwt-row-odd {
+  vertical-align: top;
   background-color: rgb( 149, 206, 145 );
 }
 
-tr:even {
+.gwt-row-even {
+  vertical-align: top;
   background-color: rgb( 189, 246, 185 );
+}
+
+.gwt-row-header {
+  vertical-align: top;
+  background-color: rgb( 234, 194, 78 );
+}
+
+.gwt-row-main {
+  vertical-align: top;
+  background-color: rgb( 245, 226, 170 );
 }
