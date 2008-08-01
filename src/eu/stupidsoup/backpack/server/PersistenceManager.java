@@ -1,5 +1,7 @@
 package eu.stupidsoup.backpack.server;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -42,6 +44,18 @@ public class PersistenceManager implements BackpackManager {
 		return this.directManager.getAllListsByNameAsStringList(listName);
 	}
 
+	
+	
+	public Set<String> getAllGTDTags() {
+		Set<String> result = new HashSet<String>();
+		
+		List<BackpackGTD> gtdList = this.model.getAllBackpackGTD();
+		for (BackpackGTD gtd: gtdList) {
+			result.addAll( gtd.getPageTags() );
+		}
+		
+		return result;
+	}
 	
 	
 	public BackpackGTD getGTDbyPage(String pageName) {

@@ -2,6 +2,7 @@ package eu.stupidsoup.backpack.server;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import net.sf.dozer.util.mapping.DozerBeanMapper;
 import net.sf.dozer.util.mapping.MapperIF;
@@ -23,6 +24,10 @@ public class BackpackViewServiceController implements BackpackViewService {
 			result.add( (BackpackClientGTD) mapper.map(gtd, BackpackClientGTD.class) );
 		}
 		return result;
+	}
+	
+	public Set<String> getAllGTDTags() {
+		return this.listManager.getAllGTDTags();
 	}
 	
 	public void setBackpackManager(BackpackManager manager) {

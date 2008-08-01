@@ -72,6 +72,11 @@ public class ListManager implements BackpackManager {
 	
 	
 	
+	public Set<String> getAllGTDTags() {
+		throw new UnsupportedOperationException();
+	}
+	
+	
 	public BackpackGTD getGTDbyPage(String pageName) {
 		return accessor.getGTDByName(pageName);
 	}

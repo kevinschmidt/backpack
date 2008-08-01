@@ -2,12 +2,14 @@ package eu.stupidsoup.backpack.server;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import eu.stupidsoup.backpack.model.BackpackGTD;
 import eu.stupidsoup.backpack.model.BackpackList;
 
 public interface BackpackManager {
 	
+	public Set<String> getAllGTDTags();
 	public BackpackGTD getGTDbyPage(String pageName);
 	public Map<String, BackpackGTD> getGTDLists();
 	public Map<String, BackpackGTD> getGTDListsByTag(String tagName);
