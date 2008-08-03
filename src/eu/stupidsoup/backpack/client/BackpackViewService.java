@@ -13,4 +13,5 @@ import eu.stupidsoup.backpack.client.model.BackpackClientGTD;
 public interface BackpackViewService extends RemoteService {
 	public List<BackpackClientGTD> getGTDListsByTag(String tag);
 	public Set<String> getAllGTDTags();
+	public void refresh();
 }

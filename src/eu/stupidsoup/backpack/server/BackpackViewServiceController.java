@@ -30,6 +30,11 @@ public class BackpackViewServiceController implements BackpackViewService {
 		return this.listManager.getAllGTDTags();
 	}
 	
+	public void refresh() {
+		this.listManager.refresh();
+	}
+	
+	
 	public void setBackpackManager(BackpackManager manager) {
 		this.listManager = manager;
 	}                                                      

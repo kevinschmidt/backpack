@@ -11,4 +11,5 @@ import eu.stupidsoup.backpack.client.model.BackpackClientGTD;
 public interface BackpackViewServiceAsync {
 	public void getGTDListsByTag(String tag, AsyncCallback<List<BackpackClientGTD>> callback);
 	public void getAllGTDTags(AsyncCallback<Set<String>> callback);
+	public void refresh(AsyncCallback callback);
 }

@@ -4,16 +4,26 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.HorizontalSplitPanel;
 import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.SourcesTabEvents;
+import com.google.gwt.user.client.ui.StackPanel;
+import com.google.gwt.user.client.ui.TabBar;
+import com.google.gwt.user.client.ui.TabListener;
+import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -22,75 +32,103 @@ import eu.stupidsoup.backpack.client.model.BackpackClientList;
 import eu.stupidsoup.backpack.client.model.BackpackClientListItem;
 
 
-public class BackpackView implements EntryPoint, ClickListener {
+public class BackpackView implements EntryPoint, ClickListener, TabListener {
 	private BackpackViewServiceAsync backpackAsync;
-	private FlexTable mainTable = new FlexTable();
-	private Map<String,Boolean> expandedList = new HashMap<String,Boolean>();
-	private Image loadingImage = new Image("ajax-loader.gif");
 	
+	private FlexTable gtdTable = new FlexTable();
+	private Map<String,Boolean> gtdExpandedList = new HashMap<String,Boolean>();
+	
+	private Image loadingImage = new Image("ajax-loader.gif");
+	private Button refresh = new Button("Refresh");
+	private Button expand = new Button("Expand");
+	private Button collapse = new Button("Collapse");
 
+	
 	public void onModuleLoad() {
 		backpackAsync = (BackpackViewServiceAsync) GWT.create(BackpackViewService.class);
-	    RootPanel.get().add(mainTable);
-
-		mainTable.setWidth("100%");
-		//mainTable.setBorderWidth(1);
-		mainTable.getColumnFormatter().setWidth(0, "10%");
-		mainTable.getColumnFormatter().setWidth(1, "30%");
-		mainTable.getColumnFormatter().setWidth(2, "30%");
-		mainTable.getColumnFormatter().setWidth(3, "30%");
 		
-		mainTable.setText(0, 0, "Category");
-		mainTable.setText(0, 1, "Next List");
-		mainTable.setText(0, 2, "Waiting List");
-		mainTable.setText(0, 3, "Later List");
+		HorizontalSplitPanel superDivider = new HorizontalSplitPanel();
+		RootPanel.get().add(superDivider);
 		
-		mainTable.getRowFormatter().setStyleName(0, "gwt-row-header");
 		
-		mainTable.setWidget(1, 0, loadingImage);
+		TabPanel mainTabPanel = new TabPanel();
+		mainTabPanel.setWidth("100%");
+		mainTabPanel.setHeight("100%");
+		
+		HorizontalPanel gtdPanel = new HorizontalPanel();
+		gtdPanel.add(gtdTable);
+		mainTabPanel.add(gtdPanel, "GTD");
+		mainTabPanel.add(new Label("test"), "Inbox");
+		mainTabPanel.selectTab(0);
+		mainTabPanel.addTabListener(this);
+		
+		StackPanel commandPanel = new StackPanel();
+		commandPanel.setWidth("100%");
+		VerticalPanel controlPanel = new VerticalPanel();
+		controlPanel.add(expand);
+		controlPanel.add(collapse);
+		controlPanel.add(refresh);
+		
+		refresh.addClickListener(this);
+		expand.addClickListener(this);
+		collapse.addClickListener(this);
+		
+		commandPanel.add(controlPanel, "Control");
+		commandPanel.add(new Label("test"), "Test");
+		
+		superDivider.setHeight("500px");
+		superDivider.setSplitPosition("90%");
+		superDivider.setLeftWidget(mainTabPanel);
+		superDivider.setRightWidget(commandPanel);
+		
+		
+		gtdTable.setWidth("100%");
+		gtdTable.getColumnFormatter().setWidth(0, "10%");
+		gtdTable.getColumnFormatter().setWidth(1, "30%");
+		gtdTable.getColumnFormatter().setWidth(2, "30%");
+		gtdTable.getColumnFormatter().setWidth(3, "30%");
+		
+		gtdTable.setText(0, 0, "Category");
+		gtdTable.setText(0, 1, "Next List");
+		gtdTable.setText(0, 2, "Waiting List");
+		gtdTable.setText(0, 3, "Later List");
+		
+		gtdTable.getRowFormatter().setStyleName(0, "gwt-row-header");
+		
+		gtdTable.setWidget(1, 0, loadingImage);
 		BackpackCategoryCallback callback = new BackpackCategoryCallback();
 		backpackAsync.getAllGTDTags(callback);
 	}
 
-	
-	public void onClick(Widget sender) {
-		if (sender.getClass() == Hyperlink.class ) {	
-			String category = ((Hyperlink) sender ).getTargetHistoryToken();
 
-			if ( this.expandedList.containsKey(category) ) { 
-				if ( !this.expandedList.get(category) ) {
-					this.setLoadingForCategory(category);
-					BackpackGTDCallback callback = new BackpackGTDCallback(category); 
-					backpackAsync.getGTDListsByTag(category, callback);
-				} else {
-					this.deleteRowsAfterCategory(category);
-				}
-			}
-		}
+
+	private void updateCategory(String category) {
+		this.setLoadingForCategory(category);
+		BackpackGTDCallback callback = new BackpackGTDCallback(category); 
+		backpackAsync.getGTDListsByTag(category, callback);
 	}
 	
-
 	
 	private void updateSubTableForCategory(String category, List<BackpackClientGTD> items) {
-		if ( !this.expandedList.containsKey(category) ) return;
+		if ( !this.gtdExpandedList.containsKey(category) ) return;
 		
 		int newRow = this.createRowsAfterCategory(category, items.size());
 		int counter = 0;
 		for (BackpackClientGTD gtd: items) {
-			mainTable.setText(newRow + counter, 0, gtd.getPageName());
+			gtdTable.setText(newRow + counter, 0, gtd.getPageName());
 			if (counter % 2 == 0) {
-				mainTable.getRowFormatter().setStyleName(newRow + counter, "gwt-row-odd");
+				gtdTable.getRowFormatter().setStyleName(newRow + counter, "gwt-row-odd");
 			} else {
-				mainTable.getRowFormatter().setStyleName(newRow + counter, "gwt-row-even");
+				gtdTable.getRowFormatter().setStyleName(newRow + counter, "gwt-row-even");
 			}
 			if (gtd.getNextList() != null) {
-				mainTable.setWidget(newRow + counter, 1, this.createItemsPanel( gtd.getNextList() ));
+				gtdTable.setWidget(newRow + counter, 1, this.createItemsPanel( gtd.getNextList() ));
 			}
 			if (gtd.getWaitingList() != null) {
-				mainTable.setWidget(newRow + counter, 2, this.createItemsPanel( gtd.getWaitingList() ));
+				gtdTable.setWidget(newRow + counter, 2, this.createItemsPanel( gtd.getWaitingList() ));
 			}
 			if (gtd.getLaterList() != null) {
-				mainTable.setWidget(newRow + counter, 3, this.createItemsPanel( gtd.getLaterList() ));
+				gtdTable.setWidget(newRow + counter, 3, this.createItemsPanel( gtd.getLaterList() ));
 			}
 			counter++;
 		}
@@ -98,16 +136,16 @@ public class BackpackView implements EntryPoint, ClickListener {
 	}
 	
 	
-	private void updateCategories(Set<String> categories) {
+	private void updateRootCategories(Set<String> categories) {
 		this.clearTable(1, 0, categories.size(), 4, "gwt-row-main");
 		
 		int counter = 0;
-		for (String category: categories) {
-			expandedList.put(category, false);
+		for (String category: new TreeSet<String>(categories)) {
+			gtdExpandedList.put(category, false);
 			
 			Hyperlink tempLink = new Hyperlink(category, category);
 			tempLink.addClickListener(this);
-			mainTable.setWidget(counter+1, 0, tempLink);
+			gtdTable.setWidget(counter+1, 0, tempLink);
 			counter++;
 		}
 	}
@@ -123,17 +161,17 @@ public class BackpackView implements EntryPoint, ClickListener {
 	
 	
 	private void setLoadingForCategory(String category) {
-		if ( !this.expandedList.containsKey(category) );
+		if ( !this.gtdExpandedList.containsKey(category) );
 		
-		mainTable.setWidget( this.findRowWithCategory(category), 1, loadingImage);
+		gtdTable.setWidget( this.findRowWithCategory(category), 1, loadingImage);
 		//int newRow = this.createRowsAfterCategory(category, 1);
 		//mainTable.setText(newRow, 0, "Loading ...");
 	}
 	
 	private void unsetLoadingForCategory(String category) {
-		if ( !this.expandedList.containsKey(category) );
+		if ( !this.gtdExpandedList.containsKey(category) );
 		
-		mainTable.setText( this.findRowWithCategory(category), 1, "");
+		gtdTable.setText( this.findRowWithCategory(category), 1, "");
 		//int newRow = this.createRowsAfterCategory(category, 1);
 		//mainTable.setText(newRow, 0, "Loading ...");
 	}
@@ -143,13 +181,13 @@ public class BackpackView implements EntryPoint, ClickListener {
 		Integer categoryRow = this.findRowWithCategory(category);
 		Integer nextCategoryRow = this.findNextCategory(category);
 		if (nextCategoryRow == null ) {
-			nextCategoryRow  = mainTable.getRowCount();
+			nextCategoryRow  = gtdTable.getRowCount();
 		}
 			
 		for (int i=nextCategoryRow-categoryRow-1; i < rowAmount; i++) {
-			mainTable.insertRow(nextCategoryRow);
+			gtdTable.insertRow(nextCategoryRow);
 		}
-		this.expandedList.put(category, true);
+		this.gtdExpandedList.put(category, true);
 		return categoryRow+1;
 	}
 	
@@ -157,23 +195,23 @@ public class BackpackView implements EntryPoint, ClickListener {
 		Integer categoryRow = this.findRowWithCategory(category);
 		Integer nextCategoryRow = this.findNextCategory(category);
 		if (nextCategoryRow == null ) {
-			nextCategoryRow  = mainTable.getRowCount();
+			nextCategoryRow  = gtdTable.getRowCount();
 		}
 		
 		for (int i=nextCategoryRow-1; i > categoryRow; i--) {
-			mainTable.removeRow(i);
+			gtdTable.removeRow(i);
 		}
-		this.expandedList.put(category, false);
+		this.gtdExpandedList.put(category, false);
 	}
 	
 	private Integer findNextCategory(String category) {
 		int categoryRow = this.findRowWithCategory(category);
-		for (int i = categoryRow+1; i < mainTable.getRowCount(); i++) {
-			Widget widget = mainTable.getWidget(i, 0);
+		for (int i = categoryRow+1; i < gtdTable.getRowCount(); i++) {
+			Widget widget = gtdTable.getWidget(i, 0);
 			if ( widget != null ) {
 				if ( widget.getClass() == Hyperlink.class ) {
 					Hyperlink tempLink = (Hyperlink) widget;
-					if ( this.expandedList.containsKey( tempLink.getTargetHistoryToken() ) ) {
+					if ( this.gtdExpandedList.containsKey( tempLink.getTargetHistoryToken() ) ) {
 						return i;
 					}
 				}
@@ -183,8 +221,8 @@ public class BackpackView implements EntryPoint, ClickListener {
 	}
 	
 	private Integer findRowWithCategory(String category) {
-		for (int i = 0; i < mainTable.getRowCount(); i++) {
-			Widget widget = mainTable.getWidget(i, 0);
+		for (int i = 0; i < gtdTable.getRowCount(); i++) {
+			Widget widget = gtdTable.getWidget(i, 0);
 			if ( widget != null ) {
 				if ( widget.getClass() == Hyperlink.class ) {
 					Hyperlink tempLink = (Hyperlink) widget;
@@ -199,9 +237,17 @@ public class BackpackView implements EntryPoint, ClickListener {
 	
 	private void clearTable(int rowStart, int columnStart, int rowAmount, int columnAmount, String styleName) {
 		for (int i=rowStart; i < rowStart+rowAmount; i++) {
-			mainTable.getRowFormatter().setStyleName(i, styleName);
+			gtdTable.getRowFormatter().setStyleName(i, styleName);
 			for (int j=columnStart; j < columnStart+columnAmount; j++) {
-				mainTable.setText(i, j, "");
+				gtdTable.setText(i, j, "");
+			}
+		}
+	}
+	
+	private void refreshGTD() {
+		for (Map.Entry<String, Boolean> entry: gtdExpandedList.entrySet()) {
+			if (entry.getValue()) {
+				this.updateCategory(entry.getKey());
 			}
 		}
 	}
@@ -231,9 +277,66 @@ public class BackpackView implements EntryPoint, ClickListener {
 		}
 		
 		public void onSuccess(Set<String> result) {
-			updateCategories(result);
+			updateRootCategories(result);
 		}
 
+	}
+
+	
+	
+	public void onClick(Widget sender) {
+		if (sender.getClass() == Hyperlink.class ) {	
+			String category = ((Hyperlink) sender ).getTargetHistoryToken();
+
+			if ( this.gtdExpandedList.containsKey(category) ) { 
+				if ( !this.gtdExpandedList.get(category) ) {
+					this.updateCategory(category);
+				} else {
+					this.deleteRowsAfterCategory(category);
+				}
+			}
+		}
+		
+		if (sender.getClass() == Button.class) {
+			if (sender == this.refresh) {
+				this.backpackAsync.refresh(new AsyncCallback() {
+						public void onFailure(Throwable caught) {
+							System.out.println(caught.getMessage());
+						}
+					
+						public void onSuccess(Object result) {
+							System.out.println("refresh done");
+							refreshGTD();
+						}
+					}
+				);
+			}
+			if (sender == this.expand) {
+				for (Map.Entry<String, Boolean> entry: gtdExpandedList.entrySet()) {
+					if (!entry.getValue()) {
+						this.updateCategory(entry.getKey());
+					}
+				}
+			}
+			if (sender == this.collapse) {
+				for (Map.Entry<String, Boolean> entry: gtdExpandedList.entrySet()) {
+					if (entry.getValue()) {
+						this.deleteRowsAfterCategory(entry.getKey());
+					}
+				}
+			}
+		}
+	}
+
+
+
+	public boolean onBeforeTabSelected(SourcesTabEvents sender, int tabIndex) {
+		return true;
+	}
+
+
+	public void onTabSelected(SourcesTabEvents sender, int tabIndex) {
+		// TODO Auto-generated method stub
 	}
 
 }
