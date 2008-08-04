@@ -8,9 +8,11 @@ import java.util.TreeSet;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -18,6 +20,7 @@ import com.google.gwt.user.client.ui.HorizontalSplitPanel;
 import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SourcesTabEvents;
 import com.google.gwt.user.client.ui.StackPanel;
@@ -38,11 +41,14 @@ public class BackpackView implements EntryPoint, ClickListener, TabListener {
 	private FlexTable gtdTable = new FlexTable();
 	private Map<String,Boolean> gtdExpandedList = new HashMap<String,Boolean>();
 	
-	private Image loadingImage = new Image("ajax-loader.gif");
 	private Button refresh = new Button("Refresh");
 	private Button expand = new Button("Expand");
 	private Button collapse = new Button("Collapse");
 
+	private DialogBox popup = new DialogBox();
+	private Image loadingImage = new Image("ajax-loader.gif");
+	private Image refreshLoadingImage = new Image("refresh-loader.gif");
+	
 	
 	public void onModuleLoad() {
 		backpackAsync = (BackpackViewServiceAsync) GWT.create(BackpackViewService.class);
@@ -164,16 +170,12 @@ public class BackpackView implements EntryPoint, ClickListener, TabListener {
 		if ( !this.gtdExpandedList.containsKey(category) );
 		
 		gtdTable.setWidget( this.findRowWithCategory(category), 1, loadingImage);
-		//int newRow = this.createRowsAfterCategory(category, 1);
-		//mainTable.setText(newRow, 0, "Loading ...");
 	}
 	
 	private void unsetLoadingForCategory(String category) {
 		if ( !this.gtdExpandedList.containsKey(category) );
 		
 		gtdTable.setText( this.findRowWithCategory(category), 1, "");
-		//int newRow = this.createRowsAfterCategory(category, 1);
-		//mainTable.setText(newRow, 0, "Loading ...");
 	}
 	
 	
@@ -252,6 +254,22 @@ public class BackpackView implements EntryPoint, ClickListener, TabListener {
 		}
 	}
 	
+	private void displayRefreshPopup() {
+		popup.setWidget(refreshLoadingImage);
+		popup.setText("Refresh In Progress");
+		popup.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
+			public void setPosition(int offsetWidth, int offsetHeight) {
+				int left = (Window.getClientWidth() - offsetWidth) / 3;
+				int top = (Window.getClientHeight() - offsetHeight) / 3;
+				popup.setPopupPosition(left, top);
+			}
+		});
+	}
+	
+	private void hideRefreshPopup() {
+		popup.hide();
+	}
+	
 	
 	
 	private class BackpackGTDCallback implements AsyncCallback<List<BackpackClientGTD>> {
@@ -299,13 +317,14 @@ public class BackpackView implements EntryPoint, ClickListener, TabListener {
 		
 		if (sender.getClass() == Button.class) {
 			if (sender == this.refresh) {
+				this.displayRefreshPopup();
 				this.backpackAsync.refresh(new AsyncCallback() {
 						public void onFailure(Throwable caught) {
 							System.out.println(caught.getMessage());
 						}
 					
 						public void onSuccess(Object result) {
-							System.out.println("refresh done");
+							hideRefreshPopup();
 							refreshGTD();
 						}
 					}

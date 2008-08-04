@@ -64,7 +64,12 @@ public class BackpackModel {
 		if ( sessionGTD == null ) {
 			session.save(gtd);
 		} else {
-			sessionGTD.clearLists();
+			for (BackpackList list : sessionGTD) {
+				if (list != null) {
+					session.delete(list);
+				}
+			}
+			sessionGTD.makeEmpty();
 			session.flush();
 			gtd.setGtdId(sessionGTD.getGtdId());
 			session.merge(gtd);

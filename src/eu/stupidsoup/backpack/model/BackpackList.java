@@ -14,6 +14,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Cascade;
+
 
 
 @Entity @Table(name="list")
@@ -24,6 +26,7 @@ public class BackpackList implements Iterable<BackpackListItem>, Serializable {
 	private Long listId;
 	private String name;
 	@OneToMany(mappedBy="list", cascade=CascadeType.ALL, fetch=FetchType.EAGER)
+	@Cascade({ org.hibernate.annotations.CascadeType.DELETE_ORPHAN })
 	@OrderBy("text")
 	private Set<BackpackListItem> items;
 

@@ -103,7 +103,6 @@ public class PersistenceManager implements BackpackManager {
 	public void refreshGTD() {
 		Set<String> pageList = this.model.getGTDPageList();
 		for (String pageName: pageList) {
-			if (!pageName.equalsIgnoreCase("smythe")) continue;
 			System.out.println("Refreshing page " + pageName);
 			BackpackGTD gtd = this.directManager.getGTDbyPage(pageName);
 			this.model.saveBackpackGTD(gtd);

@@ -1,7 +1,10 @@
 package eu.stupidsoup.backpack.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -17,7 +20,7 @@ import org.hibernate.annotations.CollectionOfElements;
 
 
 @Entity @Table(name="gtd")
-public class BackpackGTD implements Serializable {
+public class BackpackGTD implements Iterable<BackpackList>, Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	@Id @GeneratedValue
@@ -120,5 +123,13 @@ public class BackpackGTD implements Serializable {
 		sb.append("\n");
 		sb.append( (this.laterList != null) ? this.laterList.getItemsAsString() : "" );
 		return sb.toString();
+	}
+
+	public Iterator<BackpackList> iterator() {
+		List<BackpackList> itrList = new ArrayList<BackpackList>();
+		itrList.add(this.nextList);
+		itrList.add(this.waitingList);
+		itrList.add(this.laterList);
+		return itrList.iterator();
 	}
 }
