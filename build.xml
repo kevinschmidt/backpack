@@ -13,13 +13,9 @@
         <fileset dir="${lib.dir}">
             <include name="**/*.jar"/>
         </fileset>
-        <!-- We need the servlet API classes:        -->
-        <!--   for Tomcat 4.1 use servlet.jar        -->
-        <!--   for Tomcat 5.0 use servlet-api.jar    -->
-        <!--   for Other app server - check the docs -->
-        <fileset dir="/usr/share/tomcat-servlet-api-2.5/lib/">
-            <include name="servlet*.jar"/>
-        </fileset>
+    	<fileset dir="${gwt.path}">
+    	    <include name="*.jar"/>
+    	</fileset>
         <pathelement path="${build.dir}"/>
     </path>
 
@@ -33,24 +29,25 @@
         <echo message="build     --> Build the application"/>
         <echo message="deploy    --> Deploy application as directory"/>
         <echo message="deploywar --> Deploy application as a WAR file"/>
-        <echo message="install   --> Install application in Tomcat"/>
-        <echo message="reload    --> Reload application in Tomcat"/>
-        <echo message="start     --> Start Tomcat application"/>
-        <echo message="stop      --> Stop Tomcat application"/>
-        <echo message="list      --> List Tomcat applications"/>
         <echo message=""/>
     </target>
 
     <target name="build" description="Compile main source tree java files">
-        <mkdir dir="${build.dir}"/>
+        <mkdir dir="${build.dir}" />
         <javac destdir="${build.dir}" target="1.5" debug="true"
                deprecation="false" optimize="false" failonerror="true">
-            <src path="${src.dir}"/>
-            <classpath refid="master-classpath"/>
+            <src path="${src.dir}" />
+            <classpath refid="master-classpath" />
         </javac>
-	<delete includeemptydirs="true">
-	    <fileset dir="${web.dir}/WEB-INF/lib/" includes="**/*"/>
-	</delete>
+		<delete includeemptydirs="true">
+	    	<fileset dir="${web.dir}/WEB-INF/lib/" includes="**/*"/>
+		</delete>
+		<java classpathref="master-classpath" fork="true" classname="com.google.gwt.dev.GWTCompiler">
+			<jvmarg line="-XstartOnFirstThread" />
+			<jvmarg line="-Xmx256M" />
+			<arg line="-out ${web.dir} /"/>
+			<arg line="eu.stupidsoup.backpack.BackpackView" />
+    	</java> 
     	<copy todir="${web.dir}/WEB-INF/lib/" flatten="true">
     	    <fileset dir="${lib.dir}">
     	    	<include name="**/*.*"/>
@@ -80,71 +77,4 @@
         </copy>
     </target>
 	
-<!-- ============================================================== -->
-<!-- Tomcat tasks - remove these if you don't have Tomcat installed -->
-<!-- ============================================================== -->
-
-	<taskdef name="install" classname="org.apache.catalina.ant.InstallTask">
-		<classpath>
-			<path location="${appserver.home}/server/lib/catalina-ant.jar"/>
-		</classpath>
-	</taskdef>
-	<taskdef name="reload" classname="org.apache.catalina.ant.ReloadTask">
-		<classpath>
-			<path location="${appserver.home}/server/lib/catalina-ant.jar"/>
-		</classpath>
-	</taskdef>
-	<taskdef name="list" classname="org.apache.catalina.ant.ListTask">
-		<classpath>
-			<path location="${appserver.home}/server/lib/catalina-ant.jar"/>
-		</classpath>
-	</taskdef>
-	<taskdef name="start" classname="org.apache.catalina.ant.StartTask">
-		<classpath>
-			<path location="${appserver.home}/server/lib/catalina-ant.jar"/>
-		</classpath>
-	</taskdef>
-	<taskdef name="stop" classname="org.apache.catalina.ant.StopTask">
-		<classpath>
-			<path location="${appserver.home}/server/lib/catalina-ant.jar"/>
-		</classpath>
-	</taskdef>
-
-	<target name="install" description="Install application in Tomcat">
-		<install url="${tomcat.manager.url}"
-				username="${tomcat.manager.username}"
-				password="${tomcat.manager.password}"
-				path="/${name}"
-				war="${name}"/>
-	</target>
-
-	<target name="reload" description="Reload application in Tomcat">
-		<reload url="${tomcat.manager.url}"
-				username="${tomcat.manager.username}"
-				password="${tomcat.manager.password}"
-			path="/${name}"/>
-	</target>
-
-	<target name="start" description="Start Tomcat application">
-		<start url="${tomcat.manager.url}"
-				username="${tomcat.manager.username}"
-				password="${tomcat.manager.password}"
-				path="/${name}"/>
-	</target>
-
-	<target name="stop" description="Stop Tomcat application">
-		<stop url="${tomcat.manager.url}"
-				username="${tomcat.manager.username}"
-				password="${tomcat.manager.password}"
-				path="/${name}"/>
-	</target>
-	
-	<target name="list" description="List Tomcat applications">
-		<list url="${tomcat.manager.url}"
-				username="${tomcat.manager.username}"
-				password="${tomcat.manager.password}"/>
-	</target>
-
-   	<!-- End Tomcat tasks -->
-
 </project>
