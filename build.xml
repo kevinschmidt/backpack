@@ -6,8 +6,8 @@
     <property name="src.dir" value="src"/>
     <property name="lib.dir" value="lib"/>
     <property name="web.dir" value="WebContent"/>
-    <property name="build.dir" value="${web.dir}/WEB-INF/classes"/>
-    <property name="name" value="backpack"/>
+    <property name="build.dir" value="build" />
+    <property name="javatarget.dir" value="${build.dir}/WEB-INF/classes"/>
 
     <path id="master-classpath">
         <fileset dir="${lib.dir}">
@@ -16,7 +16,8 @@
     	<fileset dir="${gwt.path}">
     	    <include name="*.jar"/>
     	</fileset>
-        <pathelement path="${build.dir}"/>
+        <pathelement path="${javatarget.dir}"/>
+        <pathelement path="${src.dir}"/>
     </path>
 
     <target name="usage">
@@ -27,46 +28,48 @@
         <echo message="Available targets are:"/>
         <echo message=""/>
         <echo message="build     --> Build the application"/>
-        <echo message="deploy    --> Deploy application as directory"/>
         <echo message="deploywar --> Deploy application as a WAR file"/>
         <echo message=""/>
     </target>
 
-    <target name="build" description="Compile main source tree java files">
-        <mkdir dir="${build.dir}" />
-        <javac destdir="${build.dir}" target="1.5" debug="true"
+    <target name="prepbuild" description="Prepares for building">
+	<mkdir dir="${build.dir}" />
+	<copy todir="${build.dir}" flatten="false">
+	    <fileset dir="${web.dir}">
+		<include name="**/*.*"/>
+	    </fileset>
+	</copy>
+	<copy todir="${build.dir}/WEB-INF/lib/" flatten="true">
+            <fileset dir="${lib.dir}">
+	        <include name="**/*.*"/>
+            </fileset>
+        </copy>
+    	<mkdir dir="${javatarget.dir}" />
+	<copy todir="${javatarget.dir}" flatten="false">
+		<fileset dir="${src.dir}">
+			<include name="**/*.xml"/>
+			<include name="**/*.properties"/>
+		</fileset>
+	</copy>
+    </target>
+
+    <target name="build" depends="prepbuild" description="Compile main source tree java files">
+        <javac destdir="${javatarget.dir}" target="1.5" debug="true"
                deprecation="false" optimize="false" failonerror="true">
             <src path="${src.dir}" />
             <classpath refid="master-classpath" />
         </javac>
-		<delete includeemptydirs="true">
-	    	<fileset dir="${web.dir}/WEB-INF/lib/" includes="**/*"/>
-		</delete>
-		<java classpathref="master-classpath" fork="true" classname="com.google.gwt.dev.GWTCompiler">
-			<jvmarg line="-XstartOnFirstThread" />
-			<jvmarg line="-Xmx256M" />
-			<arg line="-out ${web.dir} /"/>
-			<arg line="eu.stupidsoup.backpack.BackpackView" />
+	<java classpathref="master-classpath" fork="true" classname="com.google.gwt.dev.GWTCompiler">
+		<jvmarg line="-Xmx256M" />
+		<arg line="-out ${build.dir}"/>
+		<arg line="eu.stupidsoup.backpack.BackpackView" />
     	</java> 
-    	<copy todir="${web.dir}/WEB-INF/lib/" flatten="true">
-    	    <fileset dir="${lib.dir}">
-    	    	<include name="**/*.*"/>
-    	    </fileset>
-    	</copy>
-    </target>
-
-    <target name="deploy" depends="build" description="Deploy application">
-    	<copy todir="${deploy.path}/${name}" preservelastmodified="true">
-            <fileset dir="${web.dir}">
-                <include name="**/*.*"/>
-            </fileset>
-        </copy>
     </target>
 
     <target name="deploywar" depends="build" description="Deploy application as a WAR file">
         <war destfile="${name}.war"
-             webxml="${web.dir}/WEB-INF/web.xml">
-            <fileset dir="${web.dir}">
+             webxml="${build.dir}/WEB-INF/web.xml">
+            <fileset dir="${build.dir}">
                 <include name="**/*.*"/>
             </fileset>
         </war>
@@ -75,6 +78,11 @@
                 <include name="*.war"/>
             </fileset>
         </copy>
+    </target>
+
+    <target name="clean">
+    	<delete dir="${build.dir}" />
+	<delete file="backpack.war" />
     </target>
 	
 </project>
