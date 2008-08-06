@@ -70,3 +70,6 @@
 backpack.war
 WebContent/WEB-INF/lib/spring-test.jar
 WebContent/WEB-INF/lib/spring-webmvc.jar
+WebContent/.gwt-tmp
+WebContent/eu.stupidsoup.backpack.BackpackView
+WebContent/eu.stupidsoup.backpack.BackpackView-aux

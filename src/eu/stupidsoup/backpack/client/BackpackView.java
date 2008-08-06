@@ -24,7 +24,6 @@ import com.google.gwt.user.client.ui.PopupPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.SourcesTabEvents;
 import com.google.gwt.user.client.ui.StackPanel;
-import com.google.gwt.user.client.ui.TabBar;
 import com.google.gwt.user.client.ui.TabListener;
 import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -46,8 +45,8 @@ public class BackpackView implements EntryPoint, ClickListener, TabListener {
 	private Button collapse = new Button("Collapse");
 
 	private DialogBox popup = new DialogBox();
-	private Image loadingImage = new Image("ajax-loader.gif");
-	private Image refreshLoadingImage = new Image("refresh-loader.gif");
+	private Image loadingImage = new Image("/backpack/images/ajax-loader.gif");
+	private Image refreshLoadingImage = new Image("/backpack/images/refresh-loader.gif");
 	
 	
 	public void onModuleLoad() {
@@ -259,8 +258,8 @@ public class BackpackView implements EntryPoint, ClickListener, TabListener {
 		popup.setText("Refresh In Progress");
 		popup.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
 			public void setPosition(int offsetWidth, int offsetHeight) {
-				int left = (Window.getClientWidth() - offsetWidth) / 3;
-				int top = (Window.getClientHeight() - offsetHeight) / 3;
+				int left = (Window.getClientWidth() - offsetWidth) / 2;
+				int top = (Window.getClientHeight() - offsetHeight) / 2;
 				popup.setPopupPosition(left, top);
 			}
 		});
