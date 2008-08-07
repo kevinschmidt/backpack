@@ -84,7 +84,7 @@ public class BackpackModel {
 		Session session = HibernateUtil.getSession();
 		Transaction trans = session.beginTransaction();
 		
-		List results = session.createCriteria(BackpackGTD.class)
+		List<String> results = session.createCriteria(BackpackGTD.class)
     		.setProjection( Property.forName("pageName").group() )
     		//.addOrder( Order.asc("pageName") )
     		.list();
@@ -93,5 +93,19 @@ public class BackpackModel {
 		session.close();
 		
 		return new HashSet<String>( results );
+	}
+	
+	
+	public void clearGTD() {
+		Session session = HibernateUtil.getSession();
+		Transaction trans = session.beginTransaction();
+		
+		List<BackpackGTD> results = session.createCriteria(BackpackGTD.class).list();
+		for (BackpackGTD gtd: results) {
+			session.delete(gtd);
+		}
+		
+		trans.commit();
+		session.close();
 	}
 }

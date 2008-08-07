@@ -12,4 +12,5 @@ public interface BackpackViewServiceAsync {
 	public void getGTDListsByTag(String tag, AsyncCallback<List<BackpackClientGTD>> callback);
 	public void getAllGTDTags(AsyncCallback<Set<String>> callback);
 	public void refresh(AsyncCallback callback);
+	public void sync(AsyncCallback callback);
 }

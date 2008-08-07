@@ -34,6 +34,10 @@ public class BackpackViewServiceController implements BackpackViewService {
 		this.listManager.refresh();
 	}
 	
+	public void sync() {
+		this.listManager.sync();
+	}
+	
 	
 	public void setBackpackManager(BackpackManager manager) {
 		this.listManager = manager;

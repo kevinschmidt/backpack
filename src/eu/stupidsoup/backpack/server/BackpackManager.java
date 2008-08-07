@@ -20,4 +20,5 @@ public interface BackpackManager {
 	public Map<String, List<String>> getAllListsByNameAsStringList(String listName);
 	
 	public void refresh();
+	public void sync();
 }

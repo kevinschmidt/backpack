@@ -40,10 +40,11 @@ public class BackpackView implements EntryPoint, ClickListener, TabListener {
 	private FlexTable gtdTable = new FlexTable();
 	private Map<String,Boolean> gtdExpandedList = new HashMap<String,Boolean>();
 	
-	private Button refresh = new Button("Refresh");
 	private Button expand = new Button("Expand");
 	private Button collapse = new Button("Collapse");
-
+	private Button refresh = new Button("Refresh");
+	private Button sync = new Button("Sync");
+	
 	private DialogBox popup = new DialogBox();
 	private Image loadingImage = new Image("/backpack/images/ajax-loader.gif");
 	private Image refreshLoadingImage = new Image("/backpack/images/refresh-loader.gif");
@@ -73,10 +74,12 @@ public class BackpackView implements EntryPoint, ClickListener, TabListener {
 		controlPanel.add(expand);
 		controlPanel.add(collapse);
 		controlPanel.add(refresh);
+		controlPanel.add(sync);
 		
-		refresh.addClickListener(this);
 		expand.addClickListener(this);
 		collapse.addClickListener(this);
+		refresh.addClickListener(this);
+		sync.addClickListener(this);
 		
 		commandPanel.add(controlPanel, "Control");
 		commandPanel.add(new Label("test"), "Test");
@@ -100,11 +103,25 @@ public class BackpackView implements EntryPoint, ClickListener, TabListener {
 		
 		gtdTable.getRowFormatter().setStyleName(0, "gwt-row-header");
 		
+		refreshRootCategories();
+	}
+
+
+
+	private void refreshRootCategories() {
 		gtdTable.setWidget(1, 0, loadingImage);
 		BackpackCategoryCallback callback = new BackpackCategoryCallback();
 		backpackAsync.getAllGTDTags(callback);
 	}
-
+	
+	
+	private void refreshGTD() {
+		for (Map.Entry<String, Boolean> entry: gtdExpandedList.entrySet()) {
+			if (entry.getValue()) {
+				this.updateCategory(entry.getKey());
+			}
+		}
+	}
 
 
 	private void updateCategory(String category) {
@@ -142,7 +159,13 @@ public class BackpackView implements EntryPoint, ClickListener, TabListener {
 	
 	
 	private void updateRootCategories(Set<String> categories) {
+		this.clearTable();
 		this.clearTable(1, 0, categories.size(), 4, "gwt-row-main");
+		
+		if (categories.size() == 0) {
+			gtdTable.setText(1, 0, "");
+			return;
+		}
 		
 		int counter = 0;
 		for (String category: new TreeSet<String>(categories)) {
@@ -236,6 +259,14 @@ public class BackpackView implements EntryPoint, ClickListener, TabListener {
 		return null;
 	}
 	
+	private void clearTable() {
+		System.out.println(gtdTable.getRowCount());
+		int rowCount = gtdTable.getRowCount();
+		for (int i=1; i < rowCount; i++) {
+			gtdTable.removeRow(1);
+		}
+	}
+	
 	private void clearTable(int rowStart, int columnStart, int rowAmount, int columnAmount, String styleName) {
 		for (int i=rowStart; i < rowStart+rowAmount; i++) {
 			gtdTable.getRowFormatter().setStyleName(i, styleName);
@@ -245,17 +276,10 @@ public class BackpackView implements EntryPoint, ClickListener, TabListener {
 		}
 	}
 	
-	private void refreshGTD() {
-		for (Map.Entry<String, Boolean> entry: gtdExpandedList.entrySet()) {
-			if (entry.getValue()) {
-				this.updateCategory(entry.getKey());
-			}
-		}
-	}
 	
-	private void displayRefreshPopup() {
+	private void displayRefreshPopup(String title) {
 		popup.setWidget(refreshLoadingImage);
-		popup.setText("Refresh In Progress");
+		popup.setText(title);
 		popup.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
 			public void setPosition(int offsetWidth, int offsetHeight) {
 				int left = (Window.getClientWidth() - offsetWidth) / 2;
@@ -315,20 +339,6 @@ public class BackpackView implements EntryPoint, ClickListener, TabListener {
 		}
 		
 		if (sender.getClass() == Button.class) {
-			if (sender == this.refresh) {
-				this.displayRefreshPopup();
-				this.backpackAsync.refresh(new AsyncCallback() {
-						public void onFailure(Throwable caught) {
-							System.out.println(caught.getMessage());
-						}
-					
-						public void onSuccess(Object result) {
-							hideRefreshPopup();
-							refreshGTD();
-						}
-					}
-				);
-			}
 			if (sender == this.expand) {
 				for (Map.Entry<String, Boolean> entry: gtdExpandedList.entrySet()) {
 					if (!entry.getValue()) {
@@ -342,6 +352,34 @@ public class BackpackView implements EntryPoint, ClickListener, TabListener {
 						this.deleteRowsAfterCategory(entry.getKey());
 					}
 				}
+			}
+			if (sender == this.refresh) {
+				this.displayRefreshPopup("Refresh in Progress");
+				this.backpackAsync.refresh(new AsyncCallback() {
+						public void onFailure(Throwable caught) {
+							System.out.println(caught.getMessage());
+						}
+					
+						public void onSuccess(Object result) {
+							hideRefreshPopup();
+							refreshGTD();
+						}
+					}
+				);
+			}
+			if (sender == this.sync) {
+				this.displayRefreshPopup("Sync in Progress");
+				this.backpackAsync.sync(new AsyncCallback() {
+						public void onFailure(Throwable caught) {
+							System.out.println(caught.getMessage());
+						}
+					
+						public void onSuccess(Object result) {
+							hideRefreshPopup();
+							refreshRootCategories();
+						}
+					}
+				);
 			}
 		}
 	}

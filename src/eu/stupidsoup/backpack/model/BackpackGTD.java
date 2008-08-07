@@ -15,6 +15,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CollectionOfElements;
 
 
@@ -29,12 +31,15 @@ public class BackpackGTD implements Iterable<BackpackList>, Serializable {
 	@CollectionOfElements(fetch = FetchType.EAGER)
 	private Set<String> pageTags;
 	@OneToOne(cascade = CascadeType.ALL)
+	@Cascade({ org.hibernate.annotations.CascadeType.DELETE_ORPHAN })
 	@JoinColumn(name = "next_list_listid")
 	private BackpackList nextList;
 	@OneToOne(cascade = CascadeType.ALL)
+	@Cascade({ org.hibernate.annotations.CascadeType.DELETE_ORPHAN })
 	@JoinColumn(name = "waiting_list_listid")
 	private BackpackList waitingList;
 	@OneToOne(cascade = CascadeType.ALL)
+	@Cascade({ org.hibernate.annotations.CascadeType.DELETE_ORPHAN })
 	@JoinColumn(name = "later_list_listid")
 	private BackpackList laterList;
 	

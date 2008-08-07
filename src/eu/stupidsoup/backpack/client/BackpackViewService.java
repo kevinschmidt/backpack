@@ -14,4 +14,5 @@ public interface BackpackViewService extends RemoteService {
 	public List<BackpackClientGTD> getGTDListsByTag(String tag);
 	public Set<String> getAllGTDTags();
 	public void refresh();
+	public void sync();
 }

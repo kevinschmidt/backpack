@@ -1,6 +1,7 @@
 package eu.stupidsoup.backpack.server;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -109,4 +110,18 @@ public class PersistenceManager implements BackpackManager {
 		}
 	}
 
+	
+	
+	public void sync() {
+		this.syncGTD();
+	}
+	
+	public void syncGTD() {
+		this.model.clearGTD();
+		Collection<BackpackGTD> gtdList = this.directManager.getGTDLists().values();
+		for (BackpackGTD gtd: gtdList) {
+			System.out.println("Adding page " + gtd.getPageName());
+			this.model.saveBackpackGTD(gtd);
+		}
+	}
 }

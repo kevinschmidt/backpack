@@ -111,4 +111,8 @@ public class ListManager implements BackpackManager {
 	public void refresh() {
 	}
 	
+	
+	public void sync() {
+	}
+	
 }
