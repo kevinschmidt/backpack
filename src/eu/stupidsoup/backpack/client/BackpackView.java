@@ -10,11 +10,11 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlexTable;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.HorizontalSplitPanel;
 import com.google.gwt.user.client.ui.Hyperlink;
@@ -26,6 +26,8 @@ import com.google.gwt.user.client.ui.SourcesTabEvents;
 import com.google.gwt.user.client.ui.StackPanel;
 import com.google.gwt.user.client.ui.TabListener;
 import com.google.gwt.user.client.ui.TabPanel;
+import com.google.gwt.user.client.ui.Tree;
+import com.google.gwt.user.client.ui.TreeImages;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -48,6 +50,7 @@ public class BackpackView implements EntryPoint, ClickListener, TabListener {
 	private DialogBox popup = new DialogBox();
 	private Image loadingImage = new Image("/backpack/images/ajax-loader.gif");
 	private Image refreshLoadingImage = new Image("/backpack/images/refresh-loader.gif");
+	private TreeImages backpackItemTreeImages = (TreeImages) GWT.create(BackpackItemTreeImages.class);
 	
 	
 	public void onModuleLoad() {
@@ -144,13 +147,13 @@ public class BackpackView implements EntryPoint, ClickListener, TabListener {
 				gtdTable.getRowFormatter().setStyleName(newRow + counter, "gwt-row-even");
 			}
 			if (gtd.getNextList() != null) {
-				gtdTable.setWidget(newRow + counter, 1, this.createItemsPanel( gtd.getNextList() ));
+				gtdTable.setWidget(newRow + counter, 1, this.createItemsWidget( gtd.getNextList() ));
 			}
 			if (gtd.getWaitingList() != null) {
-				gtdTable.setWidget(newRow + counter, 2, this.createItemsPanel( gtd.getWaitingList() ));
+				gtdTable.setWidget(newRow + counter, 2, this.createItemsWidget( gtd.getWaitingList() ));
 			}
 			if (gtd.getLaterList() != null) {
-				gtdTable.setWidget(newRow + counter, 3, this.createItemsPanel( gtd.getLaterList() ));
+				gtdTable.setWidget(newRow + counter, 3, this.createItemsWidget( gtd.getLaterList() ));
 			}
 			counter++;
 		}
@@ -179,12 +182,12 @@ public class BackpackView implements EntryPoint, ClickListener, TabListener {
 	}
 
 
-	private Widget createItemsPanel(BackpackClientList list) {
-		VerticalPanel panel = new VerticalPanel();
+	private Widget createItemsWidget(BackpackClientList list) {
+		Tree tree = new Tree(backpackItemTreeImages, true);
 		for (BackpackClientListItem item: list) {
-			panel.add( new HTML("<li>"+item.getText()+"</li>") );
+			tree.addItem( item.getText() );
 		}
-		return panel;
+		return tree;
 	}
 	
 	
@@ -260,7 +263,6 @@ public class BackpackView implements EntryPoint, ClickListener, TabListener {
 	}
 	
 	private void clearTable() {
-		System.out.println(gtdTable.getRowCount());
 		int rowCount = gtdTable.getRowCount();
 		for (int i=1; i < rowCount; i++) {
 			gtdTable.removeRow(1);
@@ -295,36 +297,6 @@ public class BackpackView implements EntryPoint, ClickListener, TabListener {
 	
 	
 	
-	private class BackpackGTDCallback implements AsyncCallback<List<BackpackClientGTD>> {
-		private String category;
-
-		public BackpackGTDCallback(String category) {
-			this.category = category;
-		}
-		
-		public void onFailure(Throwable caught) {
-			System.out.println(caught.getMessage());
-		}
-		
-		public void onSuccess(List<BackpackClientGTD> result) {
-			updateSubTableForCategory(category, result);
-		}
-
-	}
-	
-	private class BackpackCategoryCallback implements AsyncCallback<Set<String>> {	
-		public void onFailure(Throwable caught) {
-			System.out.println(caught.getMessage());
-		}
-		
-		public void onSuccess(Set<String> result) {
-			updateRootCategories(result);
-		}
-
-	}
-
-	
-	
 	public void onClick(Widget sender) {
 		if (sender.getClass() == Hyperlink.class ) {	
 			String category = ((Hyperlink) sender ).getTargetHistoryToken();
@@ -355,7 +327,7 @@ public class BackpackView implements EntryPoint, ClickListener, TabListener {
 			}
 			if (sender == this.refresh) {
 				this.displayRefreshPopup("Refresh in Progress");
-				this.backpackAsync.refresh(new AsyncCallback() {
+				this.backpackAsync.refresh(new AsyncCallback<Object>() {
 						public void onFailure(Throwable caught) {
 							System.out.println(caught.getMessage());
 						}
@@ -369,7 +341,7 @@ public class BackpackView implements EntryPoint, ClickListener, TabListener {
 			}
 			if (sender == this.sync) {
 				this.displayRefreshPopup("Sync in Progress");
-				this.backpackAsync.sync(new AsyncCallback() {
+				this.backpackAsync.sync(new AsyncCallback<Object>() {
 						public void onFailure(Throwable caught) {
 							System.out.println(caught.getMessage());
 						}
@@ -393,6 +365,45 @@ public class BackpackView implements EntryPoint, ClickListener, TabListener {
 
 	public void onTabSelected(SourcesTabEvents sender, int tabIndex) {
 		// TODO Auto-generated method stub
+	}
+	
+	
+	
+	public interface BackpackItemTreeImages extends TreeImages {
+		@Resource("folder-small.png")
+		AbstractImagePrototype treeOpen();
+		
+		@Resource("folder-small.png")
+		AbstractImagePrototype treeClosed();
+		
+		@Resource("folder-small.png")
+		AbstractImagePrototype treeLeaf();
+	}
+	
+	private class BackpackGTDCallback implements AsyncCallback<List<BackpackClientGTD>> {
+		private String category;
+
+		public BackpackGTDCallback(String category) {
+			this.category = category;
+		}
+		
+		public void onFailure(Throwable caught) {
+			System.out.println(caught.getMessage());
+		}
+		
+		public void onSuccess(List<BackpackClientGTD> result) {
+			updateSubTableForCategory(category, result);
+		}
+	}
+	
+	private class BackpackCategoryCallback implements AsyncCallback<Set<String>> {	
+		public void onFailure(Throwable caught) {
+			System.out.println(caught.getMessage());
+		}
+		
+		public void onSuccess(Set<String> result) {
+			updateRootCategories(result);
+		}
 	}
 
 }
