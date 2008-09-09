@@ -13,6 +13,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ClickListener;
+import com.google.gwt.user.client.ui.DecoratedPopupPanel;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -28,6 +29,8 @@ import com.google.gwt.user.client.ui.TabListener;
 import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.user.client.ui.Tree;
 import com.google.gwt.user.client.ui.TreeImages;
+import com.google.gwt.user.client.ui.TreeItem;
+import com.google.gwt.user.client.ui.TreeListener;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 
@@ -36,23 +39,29 @@ import eu.stupidsoup.backpack.client.model.BackpackClientList;
 import eu.stupidsoup.backpack.client.model.BackpackClientListItem;
 
 
-public class BackpackView implements EntryPoint, ClickListener, TabListener {
+public class BackpackView implements EntryPoint, ClickListener, TabListener, TreeListener {
 	private BackpackViewServiceAsync backpackAsync;
 	
 	private FlexTable gtdTable = new FlexTable();
 	private Map<String,Boolean> gtdExpandedList = new HashMap<String,Boolean>();
+	private Map<TreeItem, BackpackClientListItem> treeItemTable = new HashMap<TreeItem, BackpackClientListItem>();
 	
 	private Button expand = new Button("Expand");
 	private Button collapse = new Button("Collapse");
 	private Button refresh = new Button("Refresh");
 	private Button sync = new Button("Sync");
 	
-	private DialogBox popup = new DialogBox();
+	private DialogBox loadingBarPopup = new DialogBox();
+	private DecoratedPopupPanel itemTooltip = new DecoratedPopupPanel();
+	
+	// Popup Panel Button
+	private Button popupHideButton = new Button("Close");
+	
 	private Image loadingImage = new Image("/backpack/images/ajax-loader.gif");
 	private Image refreshLoadingImage = new Image("/backpack/images/refresh-loader.gif");
 	private TreeImages backpackItemTreeImages = (TreeImages) GWT.create(BackpackItemTreeImages.class);
-	
-	
+
+
 	public void onModuleLoad() {
 		backpackAsync = (BackpackViewServiceAsync) GWT.create(BackpackViewService.class);
 		
@@ -83,6 +92,8 @@ public class BackpackView implements EntryPoint, ClickListener, TabListener {
 		collapse.addClickListener(this);
 		refresh.addClickListener(this);
 		sync.addClickListener(this);
+		
+		popupHideButton.addClickListener(this);
 		
 		commandPanel.add(controlPanel, "Control");
 		commandPanel.add(new Label("test"), "Test");
@@ -184,8 +195,10 @@ public class BackpackView implements EntryPoint, ClickListener, TabListener {
 
 	private Widget createItemsWidget(BackpackClientList list) {
 		Tree tree = new Tree(backpackItemTreeImages, true);
+		tree.addTreeListener(this);
 		for (BackpackClientListItem item: list) {
-			tree.addItem( item.getText() );
+			TreeItem treeItem = tree.addItem( item.getText() );
+			this.treeItemTable.put(treeItem, item);
 		}
 		return tree;
 	}
@@ -280,19 +293,36 @@ public class BackpackView implements EntryPoint, ClickListener, TabListener {
 	
 	
 	private void displayRefreshPopup(String title) {
-		popup.setWidget(refreshLoadingImage);
-		popup.setText(title);
-		popup.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
+		loadingBarPopup.setWidget(refreshLoadingImage);
+		loadingBarPopup.setText(title);
+		loadingBarPopup.setPopupPositionAndShow(new PopupPanel.PositionCallback() {
 			public void setPosition(int offsetWidth, int offsetHeight) {
 				int left = (Window.getClientWidth() - offsetWidth) / 2;
 				int top = (Window.getClientHeight() - offsetHeight) / 2;
-				popup.setPopupPosition(left, top);
+				loadingBarPopup.setPopupPosition(left, top);
 			}
 		});
 	}
 	
 	private void hideRefreshPopup() {
-		popup.hide();
+		loadingBarPopup.hide();
+	}
+	
+	private void displayItemTooltip(TreeItem treeItem) {
+		BackpackClientListItem item = this.treeItemTable.get(treeItem);
+		
+		VerticalPanel panel = new VerticalPanel();	
+		panel.add( new Label( item.getItemId().toString() ) );
+		panel.add( new Label( treeItem.getText() ) );
+		panel.add( this.popupHideButton );
+		
+		itemTooltip.setWidget( panel );
+		itemTooltip.setPopupPosition(treeItem.getAbsoluteLeft(), treeItem.getAbsoluteTop());
+		itemTooltip.show();
+	}
+	
+	private void hideItemTooltip() {
+		itemTooltip.hide();
 	}
 	
 	
@@ -353,6 +383,9 @@ public class BackpackView implements EntryPoint, ClickListener, TabListener {
 					}
 				);
 			}
+			if (sender == this.popupHideButton) {
+				this.hideItemTooltip();
+			}
 		}
 	}
 
@@ -364,6 +397,14 @@ public class BackpackView implements EntryPoint, ClickListener, TabListener {
 
 
 	public void onTabSelected(SourcesTabEvents sender, int tabIndex) {
+		// TODO Auto-generated method stub
+	}
+	
+	public void onTreeItemSelected(TreeItem item) {
+		this.displayItemTooltip(item);
+	}
+
+	public void onTreeItemStateChanged(TreeItem item) {
 		// TODO Auto-generated method stub
 	}
 	
