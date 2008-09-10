@@ -53,3 +53,7 @@ img {
   background-color: rgb( 245, 226, 170 );
   /**background-color: rgb( 234, 224, 156 );*/
 }
+
+.gwt-Tree .gwt-TreeItem-selected {
+	background: transparent;
+}

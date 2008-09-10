@@ -311,9 +311,11 @@ public class BackpackView implements EntryPoint, ClickListener, TabListener, Tre
 	private void displayItemTooltip(TreeItem treeItem) {
 		BackpackClientListItem item = this.treeItemTable.get(treeItem);
 		
-		VerticalPanel panel = new VerticalPanel();	
-		panel.add( new Label( item.getItemId().toString() ) );
-		panel.add( new Label( treeItem.getText() ) );
+		VerticalPanel panel = new VerticalPanel();
+		panel.add( new Label( "<b>Current Item</b>") );
+		panel.add( new Label( item.getText() ) );
+		panel.add( new FunctionalButton("Triage", "triage", item.getItemId(), this) );
+		panel.add( new FunctionalButton("Done", "done", item.getItemId(), this) );
 		panel.add( this.popupHideButton );
 		
 		itemTooltip.setWidget( panel );
@@ -387,6 +389,11 @@ public class BackpackView implements EntryPoint, ClickListener, TabListener, Tre
 				this.hideItemTooltip();
 			}
 		}
+		
+		if (sender.getClass() == FunctionalButton.class) {
+			FunctionalButton button = (FunctionalButton) sender;
+			System.out.println(button.getFunction());
+		}
 	}
 
 
@@ -447,4 +454,22 @@ public class BackpackView implements EntryPoint, ClickListener, TabListener, Tre
 		}
 	}
 
+	
+	private class FunctionalButton extends Button {
+		private String function;
+		private Long itemId;
+		
+		public FunctionalButton(String caption, String function, Long itemId, ClickListener listener) {
+			super(caption, listener);
+			this.function = function;
+			this.itemId = itemId;
+		}
+		
+		public String getFunction() {
+			return function;
+		}
+		public Long getItemId() {
+			return itemId;
+		}
+	}
 }
