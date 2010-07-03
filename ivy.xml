@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ivy-module version="2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
+
+	<info organisation="eu.stupidsoup" module="backpack"/>
+	<dependencies defaultconf="default">
+		<dependency org="org.springframework" name="spring-webmvc" rev="3.0.+" />
+		<!--<dependency org="org.springframework" name="spring-oxm" rev="3.0.+" />-->
+		<!--<dependency org="org.springframework" name="spring-orm" rev="3.0.+" />-->
+		<dependency org="org.hibernate" name="hibernate-annotations" rev="3.5.+" />
+	</dependencies>
+</ivy-module>
