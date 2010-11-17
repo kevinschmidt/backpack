@@ -3,3 +3,5 @@ syntax: regexp
 ^build$
 syntax: regexp
 ^war/backpack$
+syntax: regexp
+^war/WEB-INF/classes$

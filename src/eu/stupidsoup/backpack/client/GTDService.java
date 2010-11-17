@@ -4,7 +4,7 @@ import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
 
-@RemoteServiceRelativePath("gtd")
+@RemoteServiceRelativePath("gtdservice")
 public interface GTDService extends RemoteService {
 	public void ping() throws IllegalArgumentException;
 }

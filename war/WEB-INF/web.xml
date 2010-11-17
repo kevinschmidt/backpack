@@ -4,21 +4,18 @@
     "http://java.sun.com/dtd/web-app_2_3.dtd">
 
 <web-app>
-
-	<!-- Servlets -->
 	<servlet>
-		<servlet-name>gtdServlet</servlet-name>
-		<servlet-class>eu.stupidsoup.backpack.controller.GTDServiceController</servlet-class>
+		<servlet-name>spring</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
 	</servlet>
 
 	<servlet-mapping>
-		<servlet-name>gtdServlet</servlet-name>
-		<url-pattern>/backpack/gtd</url-pattern>
+		<servlet-name>spring</servlet-name>
+		<url-pattern>/</url-pattern>
 	</servlet-mapping>
 
-	<!-- Default page to serve -->
 	<welcome-file-list>
 		<welcome-file>backpack.html</welcome-file>
 	</welcome-file-list>
-
 </web-app>
