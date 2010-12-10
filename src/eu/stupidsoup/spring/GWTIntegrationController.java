@@ -1,11 +1,14 @@
 package eu.stupidsoup.spring;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.context.ServletConfigAware;
 import org.springframework.web.context.ServletContextAware;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -13,7 +16,7 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 
 
-public abstract class GWTIntegrationController extends RemoteServiceServlet implements ServletContextAware {
+public abstract class GWTIntegrationController extends RemoteServiceServlet implements ServletContextAware, ServletConfigAware {
 	private static final long serialVersionUID = 1L;
 	private ServletContext servletContext;
 	
@@ -39,5 +42,12 @@ public abstract class GWTIntegrationController extends RemoteServiceServlet impl
 	public void setServletContext(ServletContext servletContext) {
 		this.servletContext = servletContext;
 	}
-
+	@Override
+	public void setServletConfig(ServletConfig servletConfig) {
+		try {
+			super.init(servletConfig);
+		} catch (ServletException e) {
+			throw new RuntimeException(e);
+		}
+	}
 }
