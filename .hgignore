@@ -5,3 +5,5 @@ syntax: regexp
 ^war/backpack$
 syntax: regexp
 ^war/WEB-INF/classes$
+syntax: regexp
+^war/WEB-INF/lib$

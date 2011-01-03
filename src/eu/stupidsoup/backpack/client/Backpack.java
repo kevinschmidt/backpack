@@ -16,6 +16,8 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
+import eu.stupidsoup.backpack.bean.GTDListBean;
+
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
@@ -108,28 +110,25 @@ public class Backpack implements EntryPoint {
 				// Then, we send the input to the server.
 				sendButton.setEnabled(false);
 				serverResponseLabel.setText("");
-				gtdService.ping(new AsyncCallback<Void>() {
-							public void onFailure(Throwable caught) {
-								// Show the RPC error message to the user
-								dialogBox
-										.setText("Remote Procedure Call - Failure");
-								serverResponseLabel
-										.addStyleName("serverResponseLabelError");
-								serverResponseLabel.setHTML(SERVER_ERROR);
-								dialogBox.center();
-								closeButton.setFocus(true);
-							}
+				gtdService.getGTDListByName(nameField.getText(), new AsyncCallback<GTDListBean>() {
+					public void onFailure(Throwable caught) {
+						// Show the RPC error message to the user
+						dialogBox.setText("Remote Procedure Call - Failure");
+						serverResponseLabel.addStyleName("serverResponseLabelError");
+						serverResponseLabel.setHTML(SERVER_ERROR);
+						dialogBox.center();
+						closeButton.setFocus(true);
+					}
 
-							@Override
-							public void onSuccess(Void result) {
-								dialogBox.setText("Remote Procedure Call");
-								serverResponseLabel
-										.removeStyleName("serverResponseLabelError");
-								serverResponseLabel.setHTML("success");
-								dialogBox.center();
-								closeButton.setFocus(true);
-							}
-						});
+					@Override
+					public void onSuccess(GTDListBean result) {
+						dialogBox.setText("Received: id:" + result.getId() + " name:" + result.getName());
+						serverResponseLabel.removeStyleName("serverResponseLabelError");
+						serverResponseLabel.setHTML("Received: id:" + result.getId() + " name:" + result.getName());
+						dialogBox.center();
+						closeButton.setFocus(true);
+					}
+				});
 			}
 		}
 
